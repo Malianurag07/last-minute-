@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
@@ -7,6 +7,7 @@ import { Btn, Card, Chip, Field, Grid, IconBox, IconBtn, PressCard, Row, Screen,
 import { CATEGORIES, categoryById } from '../data/categories';
 import type { Provider, Service } from '../data/types';
 import { duration, to12h } from '../lib/format';
+import { newId } from '../lib/id';
 import { useStore } from '../state/store';
 import { border, colors } from '../theme';
 
@@ -30,11 +31,18 @@ interface Draft {
  * every step and ready-made service templates so nobody has to type prices.
  */
 export default function Join() {
-  const { t, lang, registerProvider, set } = useStore();
+  const guard = useStore();
+  if (!guard.user) return <Redirect href="/welcome" />;
+  if (guard.me) return <Redirect href="/p" />;
+  return <JoinWizard />;
+}
+
+function JoinWizard() {
+  const { t, lang, registerProvider, set, user } = useStore();
   const [step, setStep] = useState(0);
   const [d, setD] = useState<Draft>({
-    name: '',
-    phone: '',
+    name: user?.name ?? '',
+    phone: user ? `+91 ${user.phone}` : '',
     categoryId: '',
     services: [],
     openFrom: '09:00',
@@ -66,13 +74,13 @@ export default function Join() {
   const toggleTemplate = (tpl: { name: string; price: number; minutes: number }) => {
     const exists = d.services.find((s) => s.name === tpl.name);
     upd({
-      services: exists ? d.services.filter((s) => s.name !== tpl.name) : [...d.services, { id: `s${Date.now()}`, ...tpl }],
+      services: exists ? d.services.filter((s) => s.name !== tpl.name) : [...d.services, { id: newId('s'), ...tpl }],
     });
   };
 
   const finish = () => {
     const p: Provider = {
-      id: `p-${Date.now()}`,
+      id: newId('p'),
       name: d.name.trim(),
       phone: d.phone,
       categoryId: d.categoryId,
@@ -120,8 +128,8 @@ export default function Join() {
           icon="close"
           label="Close"
           onPress={() => {
-            set('role', null);
-            router.replace('/welcome');
+            set('role', 'customer');
+            router.replace('/');
           }}
         />
         <Txt v="label">
@@ -235,7 +243,7 @@ export default function Join() {
               full={false}
               disabled={custom.trim().length < 2}
               onPress={() => {
-                upd({ services: [...d.services, { id: `s${Date.now()}`, name: custom.trim(), price: 100, minutes: 60 }] });
+                upd({ services: [...d.services, { id: newId('s'), name: custom.trim(), price: 100, minutes: 60 }] });
                 setCustom('');
               }}
             />

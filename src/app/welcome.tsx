@@ -5,27 +5,20 @@ import { Pressable, View } from 'react-native';
 
 import { Prefs } from '../components/Prefs';
 import { Card, IconBox, PressCard, Row, Screen, SpeakBtn, Txt } from '../components/ui';
-import { DEMO_PROVIDER_ID } from '../data/seed';
+import { DEMO_PIN } from '../data/seed';
 import { useStore } from '../state/store';
 import { colors } from '../theme';
 
 export default function Welcome() {
-  const { t, set, me, providers } = useStore();
+  const { t, set, login } = useStore();
 
-  const asCustomer = () => {
-    set('role', 'customer');
-    router.replace('/c');
-  };
-  const asProvider = () => {
-    set('role', 'provider');
-    router.replace(me ? '/p' : '/join');
-  };
-  const demoShop = () => {
-    if (providers.some((p) => p.id === DEMO_PROVIDER_ID)) {
-      set('myProviderId', DEMO_PROVIDER_ID);
-      set('role', 'provider');
-      router.replace('/p');
-    }
+  const asCustomer = () => router.push({ pathname: '/auth', params: { role: 'customer' } });
+  const asProvider = () => router.push({ pathname: '/auth', params: { role: 'provider' } });
+  const demo = async (phone: string, role: 'customer' | 'provider') => {
+    const err = await login(phone, DEMO_PIN);
+    if (err) return;
+    set('role', role);
+    router.replace('/');
   };
 
   return (
@@ -66,15 +59,35 @@ export default function Welcome() {
           <RoleCard icon="bag-handle" bg="pink" title={t('iNeed')} sub={t('iNeedSub')} onPress={asCustomer} />
           <RoleCard icon="storefront" bg="green" title={t('iOffer')} sub={t('iOfferSub')} onPress={asProvider} />
 
-          <Pressable onPress={demoShop} accessibilityRole="button" style={{ alignSelf: 'center', padding: 6 }}>
-            <Txt v="label" style={{ textDecorationLine: 'underline' }}>
+          <View style={{ alignItems: 'center', gap: 4 }}>
+            <Txt v="small" color="muted">
               {t('tryDemo')}
             </Txt>
-          </Pressable>
+            <Row gap={18}>
+              <Pressable onPress={() => demo('9000012345', 'customer')} accessibilityRole="button" style={{ padding: 6 }}>
+                <Txt v="label" style={{ textDecorationLine: 'underline' }}>
+                  Demo customer
+                </Txt>
+              </Pressable>
+              <Pressable onPress={() => demo('9820011111', 'provider')} accessibilityRole="button" style={{ padding: 6 }}>
+                <Txt v="label" style={{ textDecorationLine: 'underline' }}>
+                  Demo shop
+                </Txt>
+              </Pressable>
+            </Row>
+          </View>
 
           <View style={{ height: 2, backgroundColor: colors.ink, opacity: 0.1 }} />
           <Prefs />
         </Card>
+        <Pressable onPress={() => router.push('/admin/login')} accessibilityRole="button" style={{ alignSelf: 'center', padding: 10 }}>
+          <Row gap={6}>
+            <Ionicons name="shield-half" size={18} color={colors.ink} />
+            <Txt v="label" style={{ textDecorationLine: 'underline' }}>
+              Admin login
+            </Txt>
+          </Row>
+        </Pressable>
       </Screen>
     </View>
   );

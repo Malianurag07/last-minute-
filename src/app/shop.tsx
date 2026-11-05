@@ -8,6 +8,7 @@ import { Btn, Card, Chip, Field, PressCard, Row, Screen, Section, Stepper, Txt }
 import { categoryById } from '../data/categories';
 import type { Service } from '../data/types';
 import { duration, to12h } from '../lib/format';
+import { newId } from '../lib/id';
 import { useStore } from '../state/store';
 import { colors } from '../theme';
 
@@ -73,7 +74,7 @@ export default function Shop() {
             <Txt v="label">Add more work</Txt>
             <Row gap={8} style={{ flexWrap: 'wrap' }}>
               {unused.map((tp) => (
-                <Chip key={tp.name} icon="add" label={tp.name} onPress={() => setServices((l) => [...l, { id: `s${Date.now()}`, ...tp }])} />
+                <Chip key={tp.name} icon="add" label={tp.name} onPress={() => setServices((l) => [...l, { id: newId('s'), ...tp }])} />
               ))}
             </Row>
           </View>
@@ -85,7 +86,7 @@ export default function Shop() {
             full={false}
             disabled={newName.trim().length < 2}
             onPress={() => {
-              setServices((l) => [...l, { id: `s${Date.now()}`, name: newName.trim(), price: 100, minutes: 60 }]);
+              setServices((l) => [...l, { id: newId('s'), name: newName.trim(), price: 100, minutes: 60 }]);
               setNewName('');
             }}
           />

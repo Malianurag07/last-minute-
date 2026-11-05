@@ -51,7 +51,24 @@ export interface Provider {
   /** Profile visits for the last 7 days, oldest first. */
   visits: number[];
   verified: boolean;
+  /** Hidden from customers by an admin (e.g. after complaints). */
+  suspended?: boolean;
   joinedAt: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  /** 10-digit Indian mobile number, digits only */
+  phone: string;
+  /** salted SHA-256 of the 4-digit PIN */
+  pinHash: string;
+  role: Role;
+  address: string;
+  /** set once the user has created a shop */
+  providerId?: string;
+  blocked?: boolean;
+  createdAt: string;
 }
 
 export type OrderStatus =
@@ -76,6 +93,7 @@ export interface DeliveryBooking {
 export interface Order {
   id: string;
   providerId: string;
+  customerId: string;
   customerName: string;
   customerPhone: string;
   serviceId: string;

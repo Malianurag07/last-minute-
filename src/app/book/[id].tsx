@@ -66,8 +66,6 @@ export default function Book() {
   const submit = () => {
     const o = placeOrder({
       providerId: p.id,
-      customerName: customer.name,
-      customerPhone: customer.phone,
       serviceId: svc.id,
       serviceName: svc.name,
       price: svc.price,

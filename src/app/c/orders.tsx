@@ -9,9 +9,9 @@ import { useStore } from '../../state/store';
 const DONE = ['delivered', 'declined', 'cancelled'];
 
 export default function CustomerOrders() {
-  const { t, orders, providers, customer } = useStore();
+  const { t, orders, providers, user } = useStore();
   const [tab, setTab] = useState<'active' | 'past'>('active');
-  const mine = orders.filter((o) => o.customerName === customer.name);
+  const mine = orders.filter((o) => o.customerId === user?.id);
   const list = mine.filter((o) => (tab === 'active' ? !DONE.includes(o.status) : DONE.includes(o.status)));
   return (
     <Screen>

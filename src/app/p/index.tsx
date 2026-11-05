@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 
 import { JobActions } from '../../components/JobActions';
@@ -13,12 +13,12 @@ import { border, colors, type ColorName } from '../../theme';
 
 export default function ProviderHome() {
   const { t, me, orders, easyMode, updateProvider } = useStore();
+  const [weekAgo] = useState(() => Date.now() - 7 * 864e5);
   if (!me) return null;
 
   const mine = orders.filter((o) => o.providerId === me.id);
   const requests = mine.filter((o) => o.status === 'requested');
   const active = mine.filter((o) => ['accepted', 'pickup', 'working', 'ready'].includes(o.status));
-  const weekAgo = Date.now() - 7 * 864e5;
   const earned = mine
     .filter((o) => o.status === 'delivered' && new Date(o.createdAt).getTime() > weekAgo)
     .reduce((s, o) => s + o.price + o.rushFee, 0);
@@ -45,6 +45,22 @@ export default function ProviderHome() {
           {firstName}!
         </Txt>
       </View>
+
+      {me.suspended ? (
+        <Card bg="pink" inner={{ padding: 14, flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+          <Ionicons name="pause-circle" size={30} color={colors.white} />
+          <Txt v="label" color="white" style={{ flex: 1 }}>
+            Your shop is paused by our team, so customers can’t see it. Please call the helpline.
+          </Txt>
+        </Card>
+      ) : !me.verified ? (
+        <Card bg="blueSoft" offset={3} inner={{ padding: 14, flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+          <Ionicons name="shield-half" size={28} color={colors.ink} />
+          <Txt v="small" style={{ flex: 1 }}>
+            Our team will call you to verify your shop. You can already take orders; verified shops get a green tick.
+          </Txt>
+        </Card>
+      ) : null}
 
       {/* Availability switch — the most important control, so it's huge. */}
       <Pressable

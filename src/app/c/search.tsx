@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { ProviderCard } from '../../components/cards';
@@ -11,24 +11,26 @@ import { useStore } from '../../state/store';
 
 export default function Search() {
   const params = useLocalSearchParams<{ q?: string; fast?: string }>();
-  const { t, providers, myProviderId } = useStore();
+  const { t, listed: providers } = useStore();
   const [q, setQ] = useState(params.q ?? '');
   const [quick, setQuick] = useState(params.fast === '1');
   const [openOnly, setOpenOnly] = useState(false);
   const [cat, setCat] = useState<string | null>(null);
   const [sort, setSort] = useState<Sort>('best');
 
-  useEffect(() => {
+  // when opened again from Home with new params, adopt them (React's "adjust state on prop change" pattern)
+  const [seen, setSeen] = useState({ q: params.q, fast: params.fast });
+  if (seen.q !== params.q || seen.fast !== params.fast) {
+    setSeen({ q: params.q, fast: params.fast });
     if (params.q !== undefined) setQ(params.q);
     if (params.fast !== undefined) setQuick(params.fast === '1');
-  }, [params.q, params.fast]);
+  }
 
   const results = useMemo(
     () =>
       sortProviders(
         providers.filter(
           (p) =>
-            p.id !== myProviderId &&
             matches(p, q) &&
             (!quick || fastest(p) <= 120) &&
             (!openOnly || (p.available && isOpenNow(p.openFrom, p.openTo))) &&
@@ -36,7 +38,7 @@ export default function Search() {
         ),
         sort,
       ),
-    [providers, q, quick, openOnly, cat, sort, myProviderId],
+    [providers, q, quick, openOnly, cat, sort],
   );
 
   return (

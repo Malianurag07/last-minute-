@@ -24,7 +24,7 @@ const TEMPLATES = [
  * for a bride, a baker can team up with a flower seller, etc.
  */
 export default function Partners() {
-  const { t, me, providers, collabs, sendCollab, answerCollab } = useStore();
+  const { me, providers, collabs, sendCollab, answerCollab } = useStore();
   const [q, setQ] = useState('');
   const [cat, setCat] = useState<string | null>(null);
   const [composeFor, setComposeFor] = useState<Provider | null>(null);

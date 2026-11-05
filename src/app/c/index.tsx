@@ -10,11 +10,11 @@ import { useStore } from '../../state/store';
 import { colors } from '../../theme';
 
 export default function CustomerHome() {
-  const { t, lang, providers, orders, customer } = useStore();
+  const { t, lang, listed: providers, orders, customer, user } = useStore();
   const [q, setQ] = useState('');
 
   const myActive = orders.filter(
-    (o) => o.customerName === customer.name && !['delivered', 'declined', 'cancelled'].includes(o.status),
+    (o) => o.customerId === user?.id && !['delivered', 'declined', 'cancelled'].includes(o.status),
   );
   const fast = providers
     .filter((p) => p.available && Math.min(...p.services.map((s) => s.minutes)) <= 120)
@@ -41,8 +41,8 @@ export default function CustomerHome() {
         </Txt>
         <Row gap={6}>
           <Ionicons name="location" size={18} color={colors.pink} />
-          <Txt v="label" lines={1} style={{ flexShrink: 1 }}>
-            {customer.address}
+          <Txt v="label" lines={1} style={{ flexShrink: 1 }} >
+            {customer.address || 'Add your address in Profile'}
           </Txt>
         </Row>
       </View>

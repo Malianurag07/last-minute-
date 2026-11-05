@@ -3,21 +3,25 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { ProviderCard } from '../../components/cards';
-import { Btn, Card, Field, Screen, Section, Txt } from '../../components/ui';
+import { Btn, Card, Field, Row, Screen, Section, Txt } from '../../components/ui';
+import { formatPhone } from '../../lib/auth';
 import { useStore } from '../../state/store';
 
 export default function Account() {
-  const { t, customer, set, favorites, providers } = useStore();
-  const upd = (k: keyof typeof customer) => (v: string) => set('customer', { ...customer, [k]: v });
-  const favs = providers.filter((p) => favorites.includes(p.id));
+  const { t, user, updateMe, set, favorites, listed, logout } = useStore();
+  if (!user) return null;
+  const favs = listed.filter((p) => favorites.includes(p.id));
   return (
     <Screen>
       <Txt v="h1">{t('profile')}</Txt>
       <Card bg="yellowSoft" inner={{ padding: 16, gap: 12 }}>
         <Txt v="label">Your details (shared with the provider when you book)</Txt>
-        <Field icon="person" placeholder="Name" value={customer.name} onChangeText={upd('name')} />
-        <Field icon="call" placeholder="Phone" keyboardType="phone-pad" value={customer.phone} onChangeText={upd('phone')} />
-        <Field icon="location" placeholder="Pickup / drop address" value={customer.address} onChangeText={upd('address')} />
+        <Field icon="person" placeholder="Name" value={user.name} onChangeText={(name) => updateMe({ name })} />
+        <Row gap={8} style={{ paddingHorizontal: 4 }}>
+          <Txt v="label">Mobile:</Txt>
+          <Txt>{formatPhone(user.phone)}</Txt>
+        </Row>
+        <Field icon="location" placeholder="Pickup / drop address" value={user.address} onChangeText={(address) => updateMe({ address })} />
       </Card>
       <Section title="Saved providers">
         <View style={{ gap: 14 }}>
@@ -28,7 +32,24 @@ export default function Account() {
         </View>
       </Section>
       <Btn label={t('settings')} icon="settings" bg="white" onPress={() => router.push('/settings')} />
-      <Btn label="Switch to provider mode" icon="storefront" bg="green" onPress={() => { set('role', 'provider'); router.replace('/'); }} />
+      <Btn
+        label={user.providerId ? 'Go to my shop' : 'Open a shop (become a provider)'}
+        icon="storefront"
+        bg="green"
+        onPress={() => {
+          set('role', 'provider');
+          router.replace('/');
+        }}
+      />
+      <Btn
+        label="Log out"
+        icon="log-out"
+        bg="pinkSoft"
+        onPress={() => {
+          logout();
+          router.replace('/welcome');
+        }}
+      />
     </Screen>
   );
 }

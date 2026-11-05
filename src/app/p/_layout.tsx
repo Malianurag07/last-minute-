@@ -5,7 +5,8 @@ import { TabBar } from '../../components/TabBar';
 import { useStore } from '../../state/store';
 
 export default function ProviderTabs() {
-  const { t, me, orders, collabs } = useStore();
+  const { t, me, user, orders, collabs } = useStore();
+  if (!user) return <Redirect href="/welcome" />;
   if (!me) return <Redirect href="/join" />;
   const newOrders = orders.filter((o) => o.providerId === me.id && o.status === 'requested').length;
   const newCollabs = collabs.filter((c) => c.toProviderId === me.id && c.status === 'pending').length;

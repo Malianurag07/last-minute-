@@ -1,13 +1,14 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import React from 'react';
 
 import { TabBar } from '../../components/TabBar';
 import { useStore } from '../../state/store';
 
 export default function CustomerTabs() {
-  const { t, orders, customer } = useStore();
+  const { t, orders, user } = useStore();
+  if (!user) return <Redirect href="/welcome" />;
   const active = orders.filter(
-    (o) => o.customerName === customer.name && !['delivered', 'declined', 'cancelled'].includes(o.status),
+    (o) => o.customerId === user.id && !['delivered', 'declined', 'cancelled'].includes(o.status),
   ).length;
   return (
     <Tabs

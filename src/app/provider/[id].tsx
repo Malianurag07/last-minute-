@@ -21,11 +21,11 @@ export default function ProviderProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  if (!p) {
+  if (!p || p.suspended) {
     return (
       <Screen>
         <Header title="Not found" />
-        <Empty icon="alert-circle" title="This provider is no longer listed" />
+        <Empty icon="alert-circle" title="This provider is not available right now" sub="Please choose someone else." />
       </Screen>
     );
   }

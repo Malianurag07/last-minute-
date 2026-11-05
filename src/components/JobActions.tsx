@@ -1,21 +1,10 @@
 import React from 'react';
-import { Alert, Platform, View } from 'react-native';
+import { View } from 'react-native';
 
 import type { Order } from '../data/types';
+import { confirm } from '../lib/confirm';
 import { useStore } from '../state/store';
 import { Btn, Row } from './ui';
-
-const confirm = (title: string, msg: string, onYes: () => void) => {
-  if (Platform.OS === 'web') {
-    // eslint-disable-next-line no-alert
-    if (window.confirm(`${title}\n\n${msg}`)) onYes();
-    return;
-  }
-  Alert.alert(title, msg, [
-    { text: 'No, go back', style: 'cancel' },
-    { text: 'Yes', style: 'destructive', onPress: onYes },
-  ]);
-};
 
 /**
  * The single next step for a job, as one giant button (plus a second

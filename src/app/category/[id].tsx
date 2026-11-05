@@ -11,11 +11,11 @@ import { useStore } from '../../state/store';
 
 export default function CategoryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { lang, providers, myProviderId } = useStore();
+  const { lang, listed } = useStore();
   const [sort, setSort] = useState<Sort>('best');
   const cat = categoryById(id);
   const list = sortProviders(
-    providers.filter((p) => p.categoryId === cat.id && p.id !== myProviderId),
+    listed.filter((p) => p.categoryId === cat.id),
     sort,
   );
   return (

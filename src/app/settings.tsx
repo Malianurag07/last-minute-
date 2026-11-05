@@ -1,17 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, Linking, Platform, Pressable, View } from 'react-native';
 
 import { Header } from '../components/Header';
 import { Prefs } from '../components/Prefs';
-import { Btn, Card, IconBox, Row, Screen, Section, tap, Txt } from '../components/ui';
+import { Btn, Card, Field, IconBox, Row, Screen, Section, tap, Txt } from '../components/ui';
+import { formatPhone, weakPin } from '../lib/auth';
 import { HELPLINE } from '../lib/constants';
 import { useStore } from '../state/store';
 import { border, colors } from '../theme';
 
 export default function Settings() {
-  const { t, easyMode, set, role, me, signOut, resetDemo } = useStore();
+  const { t, easyMode, set, role, me, user, logout, resetDemo, changePin } = useStore();
+  const [pinOpen, setPinOpen] = useState(false);
+  const [oldPin, setOldPin] = useState('');
+  const [newPin, setNewPin] = useState('');
+  const [pinMsg, setPinMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   const reset = () => {
     const run = () => {
@@ -67,6 +72,49 @@ export default function Settings() {
       </Section>
 
       <Section title="Account">
+        {user ? (
+          <Card inner={{ padding: 16, gap: 10 }}>
+            <Row>
+              <IconBox icon="person" bg="yellowSoft" size={48} />
+              <View style={{ flex: 1 }}>
+                <Txt v="h3">{user.name}</Txt>
+                <Txt v="small" color="muted">
+                  {formatPhone(user.phone)}
+                </Txt>
+              </View>
+            </Row>
+            {!pinOpen ? (
+              <Btn label="Change PIN" icon="key" bg="white" onPress={() => (setPinOpen(true), setPinMsg(null))} />
+            ) : (
+              <View style={{ gap: 10 }}>
+                <Field icon="lock-closed" placeholder="Current PIN" keyboardType="number-pad" secureTextEntry maxLength={4} value={oldPin} onChangeText={setOldPin} />
+                <Field icon="key" placeholder="New 4-digit PIN" keyboardType="number-pad" secureTextEntry maxLength={4} value={newPin} onChangeText={setNewPin} />
+                <Btn
+                  label="Save new PIN"
+                  icon="checkmark"
+                  bg="green"
+                  fg="white"
+                  disabled={oldPin.length !== 4 || !/^\d{4}$/.test(newPin)}
+                  onPress={async () => {
+                    if (weakPin(newPin)) return setPinMsg({ ok: false, text: 'That PIN is too easy to guess.' });
+                    const err = await changePin(oldPin, newPin);
+                    setPinMsg(err ? { ok: false, text: err } : { ok: true, text: 'PIN changed.' });
+                    if (!err) {
+                      setPinOpen(false);
+                      setOldPin('');
+                      setNewPin('');
+                    }
+                  }}
+                />
+              </View>
+            )}
+            {pinMsg ? (
+              <Txt v="label" color={pinMsg.ok ? 'success' : 'danger'}>
+                {pinMsg.text}
+              </Txt>
+            ) : null}
+          </Card>
+        ) : null}
         {role === 'provider' && me ? <Btn label={t('myShop')} icon="storefront" bg="white" onPress={() => router.push('/shop')} /> : null}
         <Btn
           label={role === 'provider' ? 'Switch to customer mode' : 'Switch to provider mode'}
@@ -82,7 +130,7 @@ export default function Settings() {
           icon="log-out"
           bg="white"
           onPress={() => {
-            signOut();
+            logout();
             router.replace('/welcome');
           }}
         />

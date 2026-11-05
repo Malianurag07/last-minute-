@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "LastMinute",
+    "slug": "last-minute",
+    "scheme": "lastminute",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lastminute.app",
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": ["uber", "olacabs", "rapido", "porter", "tel", "whatsapp"]
+      }
+    },
+    "android": {
+      "package": "com.lastminute.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#FFD21F",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "output": "single"
+    },
+    "plugins": ["expo-router", "expo-font"]
+  }
+}

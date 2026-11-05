@@ -11,7 +11,14 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.lastminute.app",
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["uber", "olacabs", "rapido", "porter", "tel", "whatsapp"]
+        "LSApplicationQueriesSchemes": [
+          "uber",
+          "olacabs",
+          "rapido",
+          "porter",
+          "tel",
+          "whatsapp"
+        ]
       }
     },
     "android": {
@@ -22,12 +29,21 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "versionCode": 1,
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "output": "single"
     },
-    "plugins": ["expo-router", "expo-font"]
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ]
   }
 }

@@ -7,3 +7,7 @@ expo-env.d.ts
 .DS_Store
 ios/
 android/
+
+# build outputs
+*.apk
+*.aab

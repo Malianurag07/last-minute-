@@ -11,3 +11,8 @@ android/
 # build outputs
 *.apk
 *.aab
+server/data/
+server/.env
+admin-web/dist/
+videos/out/
+videos/frames/

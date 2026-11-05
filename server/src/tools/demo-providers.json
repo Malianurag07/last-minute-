@@ -1,0 +1,606 @@
+[
+ {
+  "name": "Kamala Aunty's Silai",
+  "phone": "+91 98200 11111",
+  "categoryId": "tailoring",
+  "bio": "Stitching from home for 35 years. Blouses, kurtas, quick alterations. Same-day work if you call before 2 PM.",
+  "area": "Shivaji Nagar",
+  "rushFee": 50,
+  "services": [
+   {
+    "name": "Blouse stitching",
+    "price": 450,
+    "minutes": 180
+   },
+   {
+    "name": "Pant / jeans length cut",
+    "price": 80,
+    "minutes": 30
+   },
+   {
+    "name": "Kurta fitting",
+    "price": 150,
+    "minutes": 60
+   },
+   {
+    "name": "Fall & pico for saree",
+    "price": 120,
+    "minutes": 60
+   }
+  ],
+  "rating": 4.8,
+  "reviews": [
+   {
+    "author": "Priya S.",
+    "rating": 5,
+    "text": "Stitched my blouse in 3 hours before the wedding. Life saver!",
+    "date": "2026-11-03T07:35:27.380Z"
+   },
+   {
+    "author": "Neha K.",
+    "rating": 5,
+    "text": "Perfect fitting, very sweet aunty.",
+    "date": "2026-10-30T07:35:27.380Z"
+   },
+   {
+    "author": "Rohit M.",
+    "rating": 4,
+    "text": "Jeans length done in 20 mins. Good work.",
+    "date": "2026-10-25T07:35:27.380Z"
+   },
+   {
+    "author": "Ananya",
+    "rating": 5,
+    "text": "Better than the shop in the market and half the price.",
+    "date": "2026-10-17T07:35:27.380Z"
+   }
+  ],
+  "jobsDone": 214,
+  "languages": [
+   "Hindi",
+   "Marathi"
+  ],
+  "openFrom": "09:00",
+  "openTo": "20:00",
+  "verified": true,
+  "visits": [
+   18,
+   22,
+   15,
+   30,
+   27,
+   41,
+   36
+  ]
+ },
+ {
+  "name": "Razia Tailors (Home)",
+  "phone": "+91 98200 22222",
+  "categoryId": "tailoring",
+  "bio": "Embroidery, lehenga alterations and party-wear fitting.",
+  "area": "Camp",
+  "rushFee": 80,
+  "services": [
+   {
+    "name": "Lehenga alteration",
+    "price": 400,
+    "minutes": 120
+   },
+   {
+    "name": "Hand embroidery patch",
+    "price": 350,
+    "minutes": 150
+   },
+   {
+    "name": "Zip / button repair",
+    "price": 60,
+    "minutes": 20
+   }
+  ],
+  "rating": 4.5,
+  "reviews": [
+   {
+    "author": "Sana",
+    "rating": 5,
+    "text": "Fixed my lehenga the same evening.",
+    "date": "2026-11-02T07:35:27.380Z"
+   },
+   {
+    "author": "Megha",
+    "rating": 4,
+    "text": "Neat embroidery.",
+    "date": "2026-10-27T07:35:27.380Z"
+   }
+  ],
+  "jobsDone": 96,
+  "languages": [
+   "Hindi",
+   "English"
+  ],
+  "openFrom": "10:00",
+  "openTo": "21:00",
+  "verified": true,
+  "visits": [
+   8,
+   11,
+   9,
+   14,
+   12,
+   16,
+   19
+  ]
+ },
+ {
+  "name": "Sunita's Rasoi",
+  "phone": "+91 98200 33333",
+  "categoryId": "food",
+  "bio": "Pure veg home food. Thalis, party snacks and festival sweets made fresh.",
+  "area": "Kothrud",
+  "rushFee": 40,
+  "services": [
+   {
+    "name": "Veg thali (1 person)",
+    "price": 120,
+    "minutes": 45
+   },
+   {
+    "name": "Party snacks (10 people)",
+    "price": 900,
+    "minutes": 150
+   },
+   {
+    "name": "Besan ladoo (1 kg)",
+    "price": 520,
+    "minutes": 180
+   }
+  ],
+  "rating": 5,
+  "reviews": [
+   {
+    "author": "Vikram",
+    "rating": 5,
+    "text": "Ordered snacks for 12 guests 2 hours before. Delicious!",
+    "date": "2026-11-04T07:35:27.380Z"
+   },
+   {
+    "author": "Aarti",
+    "rating": 5,
+    "text": "Tastes exactly like home.",
+    "date": "2026-10-28T07:35:27.380Z"
+   }
+  ],
+  "jobsDone": 340,
+  "languages": [
+   "Hindi",
+   "English"
+  ],
+  "openFrom": "08:00",
+  "openTo": "21:30",
+  "verified": true,
+  "visits": [
+   25,
+   29,
+   31,
+   28,
+   35,
+   44,
+   50
+  ]
+ },
+ {
+  "name": "Farida Mehendi Art",
+  "phone": "+91 98200 44444",
+  "categoryId": "mehendi",
+  "bio": "Arabic, Rajasthani and bridal designs. Can come to your home.",
+  "area": "Baner",
+  "rushFee": 100,
+  "services": [
+   {
+    "name": "Simple mehendi (both hands)",
+    "price": 300,
+    "minutes": 45
+   },
+   {
+    "name": "Bridal mehendi",
+    "price": 2500,
+    "minutes": 240
+   },
+   {
+    "name": "Kids mehendi",
+    "price": 100,
+    "minutes": 15
+   }
+  ],
+  "rating": 5,
+  "reviews": [
+   {
+    "author": "Pooja",
+    "rating": 5,
+    "text": "Came within an hour for my sister’s sangeet!",
+    "date": "2026-11-01T07:35:27.380Z"
+   }
+  ],
+  "jobsDone": 128,
+  "languages": [
+   "Hindi",
+   "English"
+  ],
+  "openFrom": "10:00",
+  "openTo": "22:00",
+  "verified": true,
+  "visits": [
+   12,
+   9,
+   15,
+   13,
+   21,
+   33,
+   28
+  ]
+ },
+ {
+  "name": "Meera Bakes",
+  "phone": "+91 98200 55555",
+  "categoryId": "baking",
+  "bio": "Eggless cakes, cupcakes and brownies baked in my home kitchen.",
+  "area": "Aundh",
+  "rushFee": 120,
+  "services": [
+   {
+    "name": "Birthday cake (1 kg)",
+    "price": 750,
+    "minutes": 180
+   },
+   {
+    "name": "Cupcakes (6 pcs)",
+    "price": 300,
+    "minutes": 120
+   },
+   {
+    "name": "Eggless brownies (box)",
+    "price": 350,
+    "minutes": 90
+   }
+  ],
+  "rating": 4.5,
+  "reviews": [
+   {
+    "author": "Karan",
+    "rating": 5,
+    "text": "Midnight birthday cake delivered on time.",
+    "date": "2026-11-03T07:35:27.380Z"
+   },
+   {
+    "author": "Isha",
+    "rating": 4,
+    "text": "Yummy, slightly sweet.",
+    "date": "2026-10-21T07:35:27.380Z"
+   }
+  ],
+  "jobsDone": 77,
+  "languages": [
+   "English",
+   "Hindi"
+  ],
+  "openFrom": "09:00",
+  "openTo": "23:00",
+  "verified": true,
+  "visits": [
+   20,
+   18,
+   24,
+   19,
+   26,
+   38,
+   42
+  ]
+ },
+ {
+  "name": "Ramesh Bhai Press Wala",
+  "phone": "+91 98200 66666",
+  "categoryId": "ironing",
+  "bio": "Coal-iron and steam press. 40 shirts in an hour. Free pickup within 1 km.",
+  "area": "Shivaji Nagar",
+  "rushFee": 20,
+  "services": [
+   {
+    "name": "Ironing (per piece)",
+    "price": 12,
+    "minutes": 5
+   },
+   {
+    "name": "Saree steam press",
+    "price": 60,
+    "minutes": 15
+   },
+   {
+    "name": "Suit / blazer press",
+    "price": 80,
+    "minutes": 15
+   }
+  ],
+  "rating": 4.5,
+  "reviews": [
+   {
+    "author": "Sameer",
+    "rating": 5,
+    "text": "Saved my interview shirt at 8 AM!",
+    "date": "2026-10-31T07:35:27.380Z"
+   },
+   {
+    "author": "Divya",
+    "rating": 4,
+    "text": "Quick and cheap.",
+    "date": "2026-10-24T07:35:27.380Z"
+   }
+  ],
+  "jobsDone": 1203,
+  "languages": [
+   "Hindi",
+   "Gujarati"
+  ],
+  "openFrom": "07:00",
+  "openTo": "20:00",
+  "verified": true,
+  "visits": [
+   14,
+   12,
+   18,
+   16,
+   15,
+   22,
+   17
+  ]
+ },
+ {
+  "name": "Anil Shoe & Bag Clinic",
+  "phone": "+91 98200 77777",
+  "categoryId": "repairs",
+  "bio": "Shoe sole, bag zips, suitcase wheels, umbrellas. Fixed while you wait.",
+  "area": "Deccan",
+  "rushFee": 30,
+  "services": [
+   {
+    "name": "Shoe sole stitching",
+    "price": 120,
+    "minutes": 40
+   },
+   {
+    "name": "Bag zip replacement",
+    "price": 150,
+    "minutes": 45
+   },
+   {
+    "name": "Suitcase wheel change",
+    "price": 300,
+    "minutes": 60
+   }
+  ],
+  "rating": 5,
+  "reviews": [
+   {
+    "author": "Tanvi",
+    "rating": 5,
+    "text": "Fixed my suitcase wheel 3 hours before my flight.",
+    "date": "2026-10-29T07:35:27.380Z"
+   }
+  ],
+  "jobsDone": 410,
+  "languages": [
+   "Hindi",
+   "English"
+  ],
+  "openFrom": "09:30",
+  "openTo": "20:30",
+  "verified": true,
+  "visits": [
+   6,
+   9,
+   7,
+   8,
+   11,
+   10,
+   13
+  ]
+ },
+ {
+  "name": "Lata Beauty at Home",
+  "phone": "+91 98200 88888",
+  "categoryId": "beauty",
+  "bio": "Saree draping, hair styling and party makeup at your doorstep.",
+  "area": "Viman Nagar",
+  "rushFee": 150,
+  "services": [
+   {
+    "name": "Saree draping",
+    "price": 400,
+    "minutes": 30
+   },
+   {
+    "name": "Party makeup",
+    "price": 1500,
+    "minutes": 90
+   },
+   {
+    "name": "Hair styling",
+    "price": 600,
+    "minutes": 45
+   }
+  ],
+  "rating": 5,
+  "reviews": [
+   {
+    "author": "Ritika",
+    "rating": 5,
+    "text": "Draped my saree perfectly in 15 minutes.",
+    "date": "2026-11-02T07:35:27.380Z"
+   }
+  ],
+  "jobsDone": 152,
+  "languages": [
+   "Hindi",
+   "English"
+  ],
+  "openFrom": "08:00",
+  "openTo": "22:00",
+  "verified": true,
+  "visits": [
+   10,
+   14,
+   12,
+   18,
+   20,
+   29,
+   31
+  ]
+ },
+ {
+  "name": "Gopal Phool Wale",
+  "phone": "+91 98200 99999",
+  "categoryId": "crafts",
+  "bio": "Fresh flower garlands, pooja decoration and gift wrapping. Family business since 1979.",
+  "area": "Tulshibaug",
+  "rushFee": 30,
+  "services": [
+   {
+    "name": "Flower garland",
+    "price": 250,
+    "minutes": 60
+   },
+   {
+    "name": "Pooja decoration",
+    "price": 800,
+    "minutes": 120
+   },
+   {
+    "name": "Gift wrapping",
+    "price": 80,
+    "minutes": 20
+   }
+  ],
+  "rating": 5,
+  "reviews": [
+   {
+    "author": "Shruti",
+    "rating": 5,
+    "text": "Beautiful garlands, very fresh.",
+    "date": "2026-11-03T07:35:27.380Z"
+   }
+  ],
+  "jobsDone": 870,
+  "languages": [
+   "Marathi",
+   "Hindi"
+  ],
+  "openFrom": "06:00",
+  "openTo": "20:00",
+  "verified": true,
+  "visits": [
+   9,
+   8,
+   11,
+   10,
+   13,
+   18,
+   24
+  ]
+ },
+ {
+  "name": "Joshi Sir Tuitions",
+  "phone": "+91 98201 10101",
+  "categoryId": "tuition",
+  "bio": "Retired maths teacher. Last-minute exam revision for classes 6–12.",
+  "area": "Sadashiv Peth",
+  "rushFee": 0,
+  "services": [
+   {
+    "name": "Exam revision (1 hr)",
+    "price": 300,
+    "minutes": 60
+   },
+   {
+    "name": "School project help",
+    "price": 500,
+    "minutes": 120
+   }
+  ],
+  "rating": 5,
+  "reviews": [
+   {
+    "author": "Aditya (parent)",
+    "rating": 5,
+    "text": "My son finally understood trigonometry the night before!",
+    "date": "2026-10-26T07:35:27.381Z"
+   }
+  ],
+  "jobsDone": 260,
+  "languages": [
+   "Marathi",
+   "Hindi",
+   "English"
+  ],
+  "openFrom": "16:00",
+  "openTo": "21:00",
+  "verified": true,
+  "visits": [
+   7,
+   6,
+   9,
+   12,
+   10,
+   8,
+   11
+  ]
+ },
+ {
+  "name": "Imran Mobile Fix",
+  "phone": "+91 98201 20202",
+  "categoryId": "electronics",
+  "bio": "Screen guards, charging port cleaning, small appliance repair.",
+  "area": "Camp",
+  "rushFee": 50,
+  "services": [
+   {
+    "name": "Phone screen guard",
+    "price": 150,
+    "minutes": 15
+   },
+   {
+    "name": "Charger / cable repair",
+    "price": 100,
+    "minutes": 30
+   },
+   {
+    "name": "Mixer / iron repair",
+    "price": 250,
+    "minutes": 60
+   }
+  ],
+  "rating": 4,
+  "reviews": [
+   {
+    "author": "Neel",
+    "rating": 4,
+    "text": "Quick fix for my charging port.",
+    "date": "2026-10-30T07:35:27.381Z"
+   }
+  ],
+  "jobsDone": 189,
+  "languages": [
+   "Hindi",
+   "English"
+  ],
+  "openFrom": "10:00",
+  "openTo": "21:00",
+  "verified": true,
+  "visits": [
+   11,
+   13,
+   10,
+   12,
+   15,
+   17,
+   14
+  ]
+ }
+]

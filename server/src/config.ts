@@ -4,14 +4,28 @@
  * to start with development defaults so a misconfigured deploy fails closed.
  */
 import { randomBytes } from 'node:crypto';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 
 const env = process.env;
 export const NODE_ENV = env.NODE_ENV ?? 'development';
 export const isProd = NODE_ENV === 'production';
 export const isTest = NODE_ENV === 'test';
 
+/** Development only: keys persisted next to the dev DB so restarts can still decrypt it. */
+const devKeyFile = env.DEV_KEY_FILE ?? './data/.dev-keys.json';
+let devKeys: Record<string, string> = {};
+if (!isProd && !isTest) {
+  if (existsSync(devKeyFile)) devKeys = JSON.parse(readFileSync(devKeyFile, 'utf8'));
+  else {
+    for (const k of ['JWT_SECRET', 'DATA_KEY', 'INDEX_KEY', 'AUDIT_KEY']) devKeys[k] = randomBytes(32).toString('base64');
+    mkdirSync(dirname(devKeyFile), { recursive: true });
+    writeFileSync(devKeyFile, JSON.stringify(devKeys), { mode: 0o600 });
+  }
+}
+
 function secret(name: string, bytes = 32): Buffer {
-  const v = env[name];
+  const v = env[name] ?? devKeys[name];
   if (v) {
     const b = Buffer.from(v, 'base64');
     if (b.length < bytes) throw new Error(`${name} must be at least ${bytes} bytes (base64)`);

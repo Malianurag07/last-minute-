@@ -1,3 +1,4 @@
+import cookie from '@fastify/cookie';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
@@ -142,6 +143,7 @@ export function buildApp(opts: { db?: DB; logger?: boolean } = {}) {
     reply.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
   });
 
+  app.register(cookie);
   app.register(cors, {
     origin: (origin, cb) => cb(null, !origin || config.corsOrigins.includes(origin)),
     credentials: false,

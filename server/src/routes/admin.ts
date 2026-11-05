@@ -1,10 +1,10 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyReply } from 'fastify';
 import { jwtVerify, SignJWT } from 'jose';
 import { z } from 'zod';
 
 import { can, HttpError, PERMISSIONS, requireAdmin, type AdminRole } from '../app.ts';
 import { audit, verifyAuditChain } from '../audit.ts';
-import { config } from '../config.ts';
+import { config, isProd } from '../config.ts';
 import { burnHash, decrypt, encrypt, hashSecret, newTotpSecret, verifySecret, verifyTotp } from '../crypto.ts';
 import { all, one, run, tx } from '../db.ts';
 import { ACTIVE_STATUSES, maskPhone, passwordProblem } from '../domain.ts';
@@ -18,6 +18,13 @@ interface AdminRow {
 }
 
 const reason = z.string().trim().min(5).max(300);
+
+/**
+ * The console keeps the admin refresh token in an HttpOnly, SameSite=Strict
+ * cookie scoped to /v1/admin, so page scripts can never read it.
+ */
+const RT_COOKIE = 'lm_admin_rt';
+const cookieOpts = { httpOnly: true, secure: isProd, sameSite: 'strict' as const, path: '/v1/admin', maxAge: config.refreshTtlSec };
 const LOGIN_LIMIT = { config: { rateLimit: { max: 5, timeWindow: '5 minutes' } } };
 
 /** Short-lived token proving step 1 (password) passed; only usable for step 2 (TOTP). */
@@ -38,8 +45,9 @@ export async function adminRoutes(app: FastifyInstance) {
   const log = (req: { admin?: { sub: string }; ipHash: string }, action: string, target?: string, detail?: Record<string, unknown>) =>
     audit(db, { actorType: 'admin', actorId: req.admin?.sub ?? 'unknown', action, target, detail, ipHash: req.ipHash });
 
-  async function issue(a: AdminRow) {
+  async function issue(a: AdminRow, reply: FastifyReply) {
     const { token: refreshToken, familyId } = newRefresh(db, 'admin', a.id);
+    reply.setCookie(RT_COOKIE, refreshToken, cookieOpts);
     const accessToken = await signAccess({ sub: a.id, realm: 'admin', tv: a.token_version, role: a.role, sid: familyId });
     return { accessToken, refreshToken, expiresIn: config.adminAccessTtlSec, mustChangePassword: !!a.must_change_password, role: a.role, username: a.username };
   }
@@ -78,7 +86,7 @@ export async function adminRoutes(app: FastifyInstance) {
     return { mfa: 'totp', challenge };
   });
 
-  app.post('/login/totp', LOGIN_LIMIT, async (req) => {
+  app.post('/login/totp', LOGIN_LIMIT, async (req, reply) => {
     const body = z.object({ challenge: z.string().max(1000), code: z.string().regex(/^\d{6}$/) }).strict().parse(req.body);
     const id = await readChallenge(body.challenge);
     const a = id ? getAdmin(id) : undefined;
@@ -92,21 +100,28 @@ export async function adminRoutes(app: FastifyInstance) {
     }
     run(db, 'UPDATE admins SET totp_enabled = 1, totp_last_counter = ?, fail_count = 0, locked_until = NULL, last_login_at = ? WHERE id = ?', counter, Date.now(), a.id);
     audit(db, { actorType: 'admin', actorId: a.id, action: a.totp_enabled ? 'admin.login' : 'admin.mfa_enrolled', ipHash: req.ipHash });
-    return issue(getAdmin(a.id)!);
+    return issue(getAdmin(a.id)!, reply);
   });
 
-  app.post('/refresh', LOGIN_LIMIT, async (req) => {
-    const { refreshToken } = z.object({ refreshToken: z.string().min(20).max(200) }).strict().parse(req.body);
+  app.post('/refresh', { config: { rateLimit: { max: 30, timeWindow: '5 minutes' } } }, async (req, reply) => {
+    const body = z.object({ refreshToken: z.string().min(20).max(200).optional() }).strict().parse(req.body ?? {});
+    const refreshToken = body.refreshToken ?? req.cookies[RT_COOKIE];
+    if (!refreshToken) throw new HttpError(401, 'unauthenticated', 'Session expired.');
     const r = rotateRefresh(db, refreshToken, 'admin');
-    if (typeof r === 'string') throw new HttpError(401, 'unauthenticated', r === 'idle' ? 'Signed out after 30 minutes of inactivity.' : 'Session expired.');
+    if (typeof r === 'string') {
+      reply.clearCookie(RT_COOKIE, { path: '/v1/admin' });
+      throw new HttpError(401, 'unauthenticated', r === 'idle' ? 'Signed out after 30 minutes of inactivity.' : 'Session expired.');
+    }
+    reply.setCookie(RT_COOKIE, r.token, cookieOpts);
     const a = getAdmin(r.subjectId);
     if (!a || a.disabled) throw new HttpError(401, 'unauthenticated', 'Session expired.');
     const accessToken = await signAccess({ sub: a.id, realm: 'admin', tv: a.token_version, role: a.role, sid: r.familyId });
     return { accessToken, refreshToken: r.token, expiresIn: config.adminAccessTtlSec, mustChangePassword: !!a.must_change_password, role: a.role, username: a.username };
   });
 
-  app.post('/logout', { preHandler: requireAdmin('dashboard', { allowPasswordChange: true }) }, async (req) => {
+  app.post('/logout', { preHandler: requireAdmin('dashboard', { allowPasswordChange: true }) }, async (req, reply) => {
     revokeFamily(db, req.admin!.sid);
+    reply.clearCookie(RT_COOKIE, { path: '/v1/admin' });
     log(req, 'admin.logout');
     return { ok: true };
   });
@@ -116,7 +131,7 @@ export async function adminRoutes(app: FastifyInstance) {
     return { id: a.id, username: a.username, role: a.role, permissions: PERMISSIONS[a.role], mustChangePassword: !!a.must_change_password };
   });
 
-  app.post('/password', { preHandler: requireAdmin('dashboard', { allowPasswordChange: true }), ...LOGIN_LIMIT }, async (req) => {
+  app.post('/password', { preHandler: requireAdmin('dashboard', { allowPasswordChange: true }), ...LOGIN_LIMIT }, async (req, reply) => {
     const body = z.object({ current: z.string().max(128), next: z.string().max(128) }).strict().parse(req.body);
     const a = getAdmin(req.admin!.sub)!;
     if (!(await verifySecret(body.current, a.pass_hash))) throw new HttpError(401, 'bad_credentials', 'Current password is wrong.');
@@ -129,7 +144,7 @@ export async function adminRoutes(app: FastifyInstance) {
       revokeAll(db, 'admin', a.id); // sign out other sessions
       log(req, 'admin.password_changed');
     });
-    return issue(getAdmin(a.id)!);
+    return issue(getAdmin(a.id)!, reply);
   });
 
   /* ------------------------------------------------------------ dashboard */

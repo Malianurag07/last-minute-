@@ -129,7 +129,12 @@
     return g;
   }
 
-  window.V = { C, el, card, text, phone, anim, tap, counter, backdrop, scene, onFrame, prog, ease, lerp, clamp };
+  /** LastMinute logo tile: black lightning bolt (same as the app icon) on yellow. */
+  const logo = (size = 84) =>
+    `<span style="flex:none;width:${size}px;height:${size}px;border:${Math.max(4, size / 18)}px solid ${C.ink};border-radius:${size * 0.24}px;background:${C.yellow};display:inline-flex;align-items:center;justify-content:center">` +
+    `<svg viewBox="0 0 1024 1024" width="${size * 0.78}" height="${size * 0.78}"><polygon points="560,120 300,560 480,560 420,900 720,420 540,420 620,120" transform="translate(28,28)" fill="${C.ink}"/><polygon points="560,120 300,560 480,560 420,900 720,420 540,420 620,120" fill="#fff" stroke="${C.ink}" stroke-width="56" stroke-linejoin="round"/></svg></span>`;
+
+  window.V = { logo, C, el, card, text, phone, anim, tap, counter, backdrop, scene, onFrame, prog, ease, lerp, clamp };
   window.render = (t) => { for (const f of updaters) f(t); };
   /** wait until every image and font is ready before rendering frames */
   window.ready = async () => {

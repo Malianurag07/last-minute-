@@ -33,7 +33,7 @@ backdrop(W, H);
 {
   const s = scene(3.2, 6.4);
   anim(card({ left: '90px', top: '640px', width: '900px', height: '560px', background: C.paper, borderRadius: '40px' }, `
-    <div style="display:flex;align-items:center;gap:20px;font-size:52px"><span style="width:90px;height:90px;border:5px solid #111;border-radius:22px;background:${C.yellow};display:flex;align-items:center;justify-content:center;font-size:56px">⚡</span><span class="h">LastMinute</span></div>
+    <div style="display:flex;align-items:center;gap:20px;font-size:52px">${V.logo(90)}<span class="h">LastMinute</span></div>
     <div class="h" style="font-size:104px;margin-top:40px">Need it now?<br/>Get it done.</div>`, s), 3.4, null, { from: { s: 0.8, o: 0, r: -4 }, dur: 0.5, easing: 'back' });
 }
 
@@ -81,7 +81,7 @@ backdrop(W, H);
 {
   const s = scene(28.6, 33, { background: C.yellow });
   anim(card({ left: '80px', top: '420px', width: '920px', height: '1000px', background: C.paper, borderRadius: '44px', boxShadow: `18px 18px 0 ${C.ink}` }, `
-    <div style="display:flex;align-items:center;gap:22px;font-size:56px"><span style="width:100px;height:100px;border:5px solid #111;border-radius:24px;background:${C.yellow};display:flex;align-items:center;justify-content:center;font-size:64px">⚡</span><span class="h">LastMinute</span></div>
+    <div style="display:flex;align-items:center;gap:22px;font-size:56px">${V.logo(100)}<span class="h">LastMinute</span></div>
     <div class="h" style="font-size:112px;margin-top:50px">Need it now?<br/>Get it done.</div>
     <div class="b" style="font-size:40px;margin-top:40px;line-height:1.4">Tailors · Bakers · Home food · Mehendi · Repairs · Tuition</div>
     <div style="margin-top:56px"><span class="chip" style="font-size:46px;background:${C.pink};padding:14px 34px">Download LastMinute</span></div>`, s), 28.8, null, { from: { y: 120, s: 0.9 }, dur: 0.6, easing: 'back' });

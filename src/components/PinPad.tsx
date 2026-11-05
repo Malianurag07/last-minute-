@@ -24,7 +24,7 @@ export function PinPad({ value, onChange, error }: { value: string; onChange: (v
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'clr', '0', 'del'];
   return (
     <View style={{ gap: 18, alignItems: 'center' }}>
-      <View style={{ flexDirection: 'row', gap: 16 }} accessibilityLabel={`${value.length} of ${PIN_LENGTH} digits entered`}>
+      <View style={{ flexDirection: 'row', gap: 16 }} accessible accessibilityRole="image" accessibilityLabel={`${value.length} of ${PIN_LENGTH} digits entered`}>
         {Array.from({ length: PIN_LENGTH }).map((_, i) => (
           <View
             key={i}

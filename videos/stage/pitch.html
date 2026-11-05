@@ -36,7 +36,7 @@ const plain = { background: C.yellow };
 {
   const s = scene(0, 7.2);
   const c = anim(card({ left: '360px', top: '220px', width: '1200px', height: '640px', background: C.paper, borderRadius: '44px', boxShadow: `18px 18px 0 ${C.ink}` }, '', s), 0.2, null, { from: { y: 80, s: 0.94 }, dur: 0.8 });
-  text({ left: '70px', top: '70px', display: 'flex', alignItems: 'center', gap: '22px', fontSize: '44px' }, `<span style="width:84px;height:84px;border:5px solid ${C.ink};border-radius:20px;background:${C.yellow};display:flex;align-items:center;justify-content:center;font-size:52px">⚡</span><span class="h">LastMinute</span>`, c);
+  text({ left: '70px', top: '70px', display: 'flex', alignItems: 'center', gap: '22px', fontSize: '44px' }, `${V.logo(84)}<span class="h">LastMinute</span>`, c);
   anim(text({ left: '70px', top: '210px', fontSize: '128px' }, '<div class="h">Need it now?<br/>Get it done.</div>', c), 0.9, null, { from: { y: 40 } });
   anim(text({ left: '74px', top: '500px', fontSize: '34px', color: C.muted }, '<span class="b">Investor pitch · Last-minute services from home-based experts</span>', c), 1.8, null);
 }

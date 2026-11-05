@@ -24,6 +24,7 @@ export function TabBar({ state, emitter, navigateToTab, meta }: BottomTabBarProp
   const { fs } = useStore();
   return (
     <View
+      accessibilityRole="tablist"
       style={{
         position: 'absolute',
         left: 14,
@@ -52,7 +53,6 @@ export function TabBar({ state, emitter, navigateToTab, meta }: BottomTabBarProp
             key={route.key}
             accessibilityRole="tab"
             accessibilityState={{ selected: focused }}
-            accessibilityLabel={m.label}
             onPress={() => {
               tap();
               const e = emitter.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
@@ -81,7 +81,7 @@ export function TabBar({ state, emitter, navigateToTab, meta }: BottomTabBarProp
                     height: 20,
                     paddingHorizontal: 4,
                     borderRadius: 10,
-                    backgroundColor: colors.pink,
+                    backgroundColor: colors.danger,
                     borderWidth: 2,
                     borderColor: colors.ink,
                     alignItems: 'center',

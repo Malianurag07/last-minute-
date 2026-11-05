@@ -87,7 +87,6 @@ export default function ProviderProfile() {
               key={s.id}
               onPress={() => router.push({ pathname: '/book/[id]', params: { id: p.id, service: s.id } })}
               disabled={!p.available}
-              accessibilityLabel={`${s.name}, ${rupees(s.price)}`}
               offset={4}
               inner={{ padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12 }}
             >

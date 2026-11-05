@@ -69,6 +69,30 @@ export interface User {
   providerId?: string;
   blocked?: boolean;
   createdAt: string;
+  /** DPDP Act: declared 18+ at sign-up */
+  isAdult?: boolean;
+  consents?: Consents;
+  nominee?: { name: string; phone: string; relation: string };
+}
+
+export interface Consents {
+  noticeVersion: string;
+  /** needed to deliver the service: share name/phone/address with the provider and delivery partner */
+  orderSharing: boolean;
+  /** optional */
+  marketing: boolean;
+  at: string;
+}
+
+export interface PrivacyRequest {
+  id: string;
+  type: 'grievance' | 'erasure' | 'access' | 'correction' | 'nominee' | 'consent_withdrawal';
+  status: 'open' | 'in_progress' | 'resolved' | 'rejected';
+  subject?: string;
+  message?: string;
+  createdAt: string;
+  dueAt: string;
+  resolution?: string;
 }
 
 export type OrderStatus =

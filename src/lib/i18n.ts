@@ -13,7 +13,7 @@ const en = {
   iNeedSub: 'Find a tailor, cook, baker, repair person… near you',
   iOffer: 'I offer a service',
   iOfferSub: 'Get orders from people nearby. Simple and free.',
-  tryDemo: 'Just looking? Try a demo account (PIN 1234)',
+  tryDemo: 'Just looking? Try a demo account (PIN 2580)',
   textSize: 'Text size',
   language: 'Language',
   // customer
@@ -88,7 +88,7 @@ const hi: Partial<Dict> = {
   iNeedSub: 'दर्ज़ी, खाना, केक, रिपेयर… पास में ढूंढें',
   iOffer: 'मैं सेवा देता/देती हूँ',
   iOfferSub: 'पास के लोगों से ऑर्डर पाएं। आसान और मुफ़्त।',
-  tryDemo: 'सिर्फ़ देखना है? डेमो खाता खोलें (PIN 1234)',
+  tryDemo: 'सिर्फ़ देखना है? डेमो खाता खोलें (PIN 2580)',
   textSize: 'अक्षर का आकार',
   language: 'भाषा',
   whatNeed: 'क्या चाहिए, और कब तक?',

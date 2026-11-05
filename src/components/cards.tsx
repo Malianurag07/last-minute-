@@ -15,7 +15,7 @@ export function ProviderCard({ p, onPress }: { p: Provider; onPress: () => void 
   const open = p.available && isOpenNow(p.openFrom, p.openTo);
   const fastest = Math.min(...p.services.map((s) => s.minutes));
   return (
-    <PressCard onPress={onPress} accessibilityLabel={p.name} inner={{ padding: 14, gap: 10 }}>
+    <PressCard onPress={onPress} inner={{ padding: 14, gap: 10 }}>
       <Row style={{ alignItems: 'flex-start' }}>
         <IconBox icon={cat.icon as IconName} bg={cat.color} size={56} />
         <View style={{ flex: 1, gap: 2 }}>
@@ -88,7 +88,7 @@ export function OrderCard({ o, title, onPress }: { o: Order; title: string; onPr
   const active = !['delivered', 'declined', 'cancelled'].includes(o.status);
   const urgent = active && mins < 120;
   return (
-    <PressCard onPress={onPress} accessibilityLabel={`${o.serviceName} for ${title}`} inner={{ padding: 14, gap: 10 }}>
+    <PressCard onPress={onPress} inner={{ padding: 14, gap: 10 }}>
       <Row style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <View style={{ flex: 1 }}>
           <Txt v="h3" lines={1}>
@@ -143,7 +143,7 @@ export function Timeline({ o }: { o: Order }) {
                   justifyContent: 'center',
                 }}
               >
-                {done ? <Ionicons name="checkmark" size={16} color={colors.white} /> : null}
+                {done ? <Ionicons name="checkmark" size={16} color={colors.ink} /> : null}
               </View>
               {i < flow.length - 1 ? (
                 <View style={{ width: 3, height: 26, backgroundColor: i < idx ? colors.green : colors.line }} />

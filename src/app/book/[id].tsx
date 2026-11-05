@@ -42,6 +42,7 @@ export default function Book() {
   const [handover, setHandover] = useState<'delivery' | 'self'>('delivery');
   const quotes = useQuotes(p?.distanceKm ?? 2, 2);
   const [partnerId, setPartnerId] = useState<string | undefined>(quotes[0]?.partner.id);
+  const [busy, setBusy] = useState(false);
 
   if (!p) {
     return (
@@ -63,8 +64,9 @@ export default function Book() {
   const deliveryFee = handover === 'delivery' && quote ? quote.price : 0;
   const total = svc.price + rush + deliveryFee;
 
-  const submit = () => {
-    const o = placeOrder({
+  const submit = async () => {
+    setBusy(true);
+    const o = await placeOrder({
       providerId: p.id,
       serviceId: svc.id,
       serviceName: svc.name,
@@ -80,7 +82,8 @@ export default function Book() {
           ? { partnerId: quote.partner.id, partnerName: quote.partner.name, vehicle: quote.partner.vehicle, price: quote.price, etaMins: quote.etaMins, leg: 'both' }
           : undefined,
     });
-    router.replace(`/order/${o.id}`);
+    setBusy(false);
+    if (o) router.replace(`/order/${o.id}`);
   };
 
   return (
@@ -91,7 +94,7 @@ export default function Book() {
             <Txt v="label">{t('total')}</Txt>
             <Txt v="h1">{rupees(total)}</Txt>
           </Row>
-          <Btn label={`${t('placeOrder')} · pay after work`} icon="checkmark-circle" bg="green" size="lg" onPress={submit} />
+          <Btn label={`${t('placeOrder')} · pay after work`} icon="checkmark-circle" bg="green" size="lg" disabled={busy} onPress={submit} />
         </View>
       }
     >

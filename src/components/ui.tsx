@@ -46,6 +46,8 @@ export function Txt({
   children,
   center,
   lines,
+  role,
+  live,
 }: {
   v?: TypeVariant;
   color?: ColorName;
@@ -53,12 +55,19 @@ export function Txt({
   children: React.ReactNode;
   center?: boolean;
   lines?: number;
+  /** 'heading' exposes the text as a heading to screen readers */
+  role?: 'heading';
+  /** announce changes (errors, status) to screen readers */
+  live?: boolean;
 }) {
   const { fs } = useStore();
   const size = fs(v);
   return (
     <Text
       numberOfLines={lines}
+      accessibilityRole={role === 'heading' || v === 'h1' || v === 'display' ? 'header' : live ? 'alert' : undefined}
+      accessibilityLiveRegion={live ? 'polite' : undefined}
+      maxFontSizeMultiplier={1.6}
       style={[
         {
           color: colors[color],
@@ -300,7 +309,7 @@ export function FolderCard({
       <View style={[s.folderTab, { backgroundColor: colors[soft && color === 'yellow' ? 'yellowSoft' : color] }]}>
         <View style={[s.folderTabSlope, { backgroundColor: colors[soft && color === 'yellow' ? 'yellowSoft' : color] }]} />
       </View>
-      <PressCard onPress={onPress} accessibilityLabel={title} inner={{ padding: 14, minHeight: 150, justifyContent: 'space-between' }}>
+      <PressCard onPress={onPress} inner={{ padding: 14, minHeight: 150, justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
           <IconBox icon={icon} bg={color} size={52} />
           <View style={{ flex: 1, paddingTop: 2 }}>
@@ -325,10 +334,12 @@ export function FolderCard({
   );
 }
 
-export function Badge({ label, bg = 'pink', fg = 'white', style }: { label: string; bg?: ColorName; fg?: ColorName; style?: StyleProp<ViewStyle> }) {
+export function Badge({ label, bg = 'pink', fg, style }: { label: string; bg?: ColorName; fg?: ColorName; style?: StyleProp<ViewStyle> }) {
+  // dark backgrounds get white text, everything else ink — keeps contrast ≥ 4.5:1
+  const text = fg ?? (['ink', 'danger', 'purple', 'blue', 'success'].includes(bg) ? 'white' : 'ink');
   return (
-    <View style={[{ alignSelf: 'flex-start', backgroundColor: colors[bg], borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 }, style]}>
-      <Text style={{ color: colors[fg], fontWeight: '900', fontSize: 12, letterSpacing: 0.4 }}>{label.toUpperCase()}</Text>
+    <View style={[{ alignSelf: 'flex-start', backgroundColor: colors[bg], borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2, borderWidth: 1.5, borderColor: colors.ink }, style]}>
+      <Text style={{ color: colors[text], fontWeight: '900', fontSize: 12, letterSpacing: 0.4 }}>{label.toUpperCase()}</Text>
     </View>
   );
 }
@@ -671,7 +682,7 @@ const s = StyleSheet.create({
     height: 22,
     borderRadius: 11,
     paddingHorizontal: 5,
-    backgroundColor: colors.pink,
+    backgroundColor: colors.danger,
     borderWidth: 2,
     borderColor: colors.ink,
     alignItems: 'center',

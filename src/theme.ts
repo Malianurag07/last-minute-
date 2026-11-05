@@ -1,6 +1,7 @@
 /**
  * Neo-brutalist design tokens.
  * Thick ink outlines, hard offset shadows, bold flat colours on a warm paper background.
+ * Text colours meet WCAG 2.2 AA (≥4.5:1) on every background they are used on.
  * Contrast is kept high on purpose — many of our service providers are older and
  * may have weaker eyesight.
  */
@@ -15,20 +16,20 @@ export const colors = {
   yellowSoft: '#FFE9A3',
   pink: '#FF4F7B',
   pinkSoft: '#FFC9D6',
-  purple: '#7B61FF',
+  purple: '#5B3FE0',
   purpleSoft: '#D9D1FF',
   green: '#2DBE3A',
   greenSoft: '#C9F2C2',
   lime: '#A6E22E',
   orange: '#FF8A1F',
   orangeSoft: '#FFD8B0',
-  blue: '#2F7BFF',
+  blue: '#1F6FEB',
   blueSoft: '#CFE0FF',
   grey: '#9A9A9A',
   greySoft: '#E6E6E6',
 
-  danger: '#E5262E',
-  success: '#1E9E2C',
+  danger: '#B3141B',
+  success: '#146B1F',
 } as const;
 
 export type ColorName = keyof typeof colors;

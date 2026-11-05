@@ -98,7 +98,7 @@ export default function Partners() {
                       <Btn label="Not now" bg="white" icon="close" onPress={() => answerCollab(c.id, 'declined')} />
                     </View>
                     <View style={{ flex: 1.3 }}>
-                      <Btn label="Yes, let's talk" bg="green" fg="white" icon="checkmark" onPress={() => answerCollab(c.id, 'accepted')} />
+                      <Btn label="Yes, let's talk" bg="green" icon="checkmark" onPress={() => answerCollab(c.id, 'accepted')} />
                     </View>
                   </Row>
                 ) : c.status === 'accepted' ? (

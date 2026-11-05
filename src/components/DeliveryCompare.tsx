@@ -44,7 +44,6 @@ export function DeliveryCompare({
             key={q.partner.id}
             bg={on ? 'yellow' : 'white'}
             onPress={() => onSelect(q)}
-            accessibilityLabel={`${q.partner.name}, ${rupees(q.price)}, ${q.etaMins} minutes`}
             accessibilityState={{ selected: on }}
             offset={4}
             inner={{ padding: 12, gap: 8 }}

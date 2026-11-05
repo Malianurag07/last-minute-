@@ -80,14 +80,6 @@ export default function Welcome() {
           <View style={{ height: 2, backgroundColor: colors.ink, opacity: 0.1 }} />
           <Prefs />
         </Card>
-        <Pressable onPress={() => router.push('/admin/login')} accessibilityRole="button" style={{ alignSelf: 'center', padding: 10 }}>
-          <Row gap={6}>
-            <Ionicons name="shield-half" size={18} color={colors.ink} />
-            <Txt v="label" style={{ textDecorationLine: 'underline' }}>
-              Admin login
-            </Txt>
-          </Row>
-        </Pressable>
       </Screen>
     </View>
   );
@@ -95,7 +87,7 @@ export default function Welcome() {
 
 function RoleCard({ icon, bg, title, sub, onPress }: { icon: React.ComponentProps<typeof Ionicons>['name']; bg: 'pink' | 'green'; title: string; sub: string; onPress: () => void }) {
   return (
-    <PressCard onPress={onPress} accessibilityLabel={title} inner={{ padding: 16, flexDirection: 'row', alignItems: 'center', gap: 14, minHeight: 96 }}>
+    <PressCard onPress={onPress} inner={{ padding: 16, flexDirection: 'row', alignItems: 'center', gap: 14, minHeight: 96 }}>
       <IconBox icon={icon} bg={bg} size={60} color={bg === 'pink' ? 'white' : 'ink'} />
       <View style={{ flex: 1, gap: 2 }}>
         <Txt v="h3">{title}</Txt>

@@ -12,7 +12,7 @@ import { useStore } from '../state/store';
 import { border, colors } from '../theme';
 
 export default function Settings() {
-  const { t, easyMode, set, role, me, user, logout, resetDemo, changePin } = useStore();
+  const { t, easyMode, set, role, me, user, logout, resetDemo, changePin, live } = useStore();
   const [pinOpen, setPinOpen] = useState(false);
   const [oldPin, setOldPin] = useState('');
   const [newPin, setNewPin] = useState('');
@@ -40,6 +40,8 @@ export default function Settings() {
           <Pressable
             accessibilityRole="switch"
             accessibilityState={{ checked: easyMode }}
+            aria-checked={easyMode}
+            accessibilityLabel={t('easyMode')}
             onPress={() => {
               tap();
               set('easyMode', !easyMode);
@@ -71,6 +73,8 @@ export default function Settings() {
         </Card>
       </Section>
 
+      <Btn label="Privacy Centre" icon="shield-checkmark" bg="white" onPress={() => router.push('/privacy')} />
+
       <Section title="Account">
         {user ? (
           <Card inner={{ padding: 16, gap: 10 }}>
@@ -93,7 +97,6 @@ export default function Settings() {
                   label="Save new PIN"
                   icon="checkmark"
                   bg="green"
-                  fg="white"
                   disabled={oldPin.length !== 4 || !/^\d{4}$/.test(newPin)}
                   onPress={async () => {
                     if (weakPin(newPin)) return setPinMsg({ ok: false, text: 'That PIN is too easy to guess.' });
@@ -145,9 +148,9 @@ export default function Settings() {
         <Btn label="Call helpline" icon="call" bg="blue" fg="white" onPress={() => Linking.openURL(`tel:${HELPLINE}`)} />
       </Card>
 
-      <Btn label="Reset demo data" icon="refresh" bg="pinkSoft" onPress={reset} />
+      {!live ? <Btn label="Reset demo data" icon="refresh" bg="pinkSoft" onPress={reset} /> : null}
       <Txt v="small" color="muted" center>
-        LastMinute v1.0
+        LastMinute v1.1 · {live ? 'Connected to secure server' : 'Offline demo mode (sample data on this phone)'}
       </Txt>
     </Screen>
   );

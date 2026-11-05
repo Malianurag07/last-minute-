@@ -16,3 +16,4 @@ server/.env
 admin-web/dist/
 videos/out/
 videos/frames/
+dist-live/

@@ -28,7 +28,7 @@ export function JobActions({ o, onBookDrop }: { o: Order; onBookDrop?: () => voi
             />
           </View>
           <View style={{ flex: 1.4 }}>
-            <Btn label={t('accept')} icon="checkmark" bg="green" fg="white" size="lg" onPress={go('accepted')} />
+            <Btn label={t('accept')} icon="checkmark" bg="green" size="lg" onPress={go('accepted')} />
           </View>
         </Row>
       );
@@ -36,12 +36,12 @@ export function JobActions({ o, onBookDrop }: { o: Order; onBookDrop?: () => voi
     case 'pickup':
       return <Btn label={t('startWork')} icon="construct" bg="yellow" size="lg" onPress={go('working')} />;
     case 'working':
-      return <Btn label={t('markReady')} icon="checkmark-done" bg="green" fg="white" size="lg" onPress={go('ready')} />;
+      return <Btn label={t('markReady')} icon="checkmark-done" bg="green" size="lg" onPress={go('ready')} />;
     case 'ready':
       return (
         <View style={{ gap: 12 }}>
           {o.handover === 'delivery' && onBookDrop ? <Btn label="Book rider to send back" icon="bicycle" bg="yellow" size="lg" onPress={onBookDrop} /> : null}
-          <Btn label={t('markDelivered')} icon="hand-right" bg="green" fg="white" size="lg" onPress={go('delivered')} />
+          <Btn label={t('markDelivered')} icon="hand-right" bg="green" size="lg" onPress={go('delivered')} />
         </View>
       );
     default:

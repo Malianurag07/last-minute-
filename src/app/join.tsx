@@ -78,7 +78,7 @@ function JoinWizard() {
     });
   };
 
-  const finish = () => {
+  const finish = async () => {
     const p: Provider = {
       id: newId('p'),
       name: d.name.trim(),
@@ -100,8 +100,7 @@ function JoinWizard() {
       verified: false,
       joinedAt: new Date().toISOString(),
     };
-    registerProvider(p);
-    router.replace('/p');
+    if (await registerProvider(p)) router.replace('/p');
   };
 
   return (
@@ -170,7 +169,6 @@ function JoinWizard() {
                 bg={on ? c.soft : 'white'}
                 onPress={() => upd({ categoryId: c.id, services: on ? d.services : [] })}
                 accessibilityState={{ selected: on }}
-                accessibilityLabel={c.name}
                 inner={{ padding: 12, alignItems: 'center', gap: 8, minHeight: 140, justifyContent: 'center' }}
               >
                 <IconBox icon={c.icon as IconName} bg={c.color} size={62} />
@@ -198,6 +196,7 @@ function JoinWizard() {
                   onPress={() => toggleTemplate(tpl)}
                   accessibilityRole="checkbox"
                   accessibilityState={{ checked: !!sel }}
+                  aria-checked={!!sel}
                   accessibilityLabel={tpl.name}
                   style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}
                 >

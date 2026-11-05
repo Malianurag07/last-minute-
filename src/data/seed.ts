@@ -1,3 +1,4 @@
+import { NOTICE_VERSION } from '../lib/privacy';
 import type { Collaboration, Order, Provider, Review, User } from './types';
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -33,7 +34,7 @@ const make = (p: P): Provider => {
 };
 
 export const DEMO_PROVIDER_ID = 'p-kamala';
-export const DEMO_PIN = '1234';
+export const DEMO_PIN = '2580';
 
 export const SEED_PROVIDERS: Provider[] = [
   make({
@@ -285,52 +286,56 @@ export const SEED_PROVIDERS: Provider[] = [
   }),
 ];
 
-/** Demo accounts. Every demo PIN is 1234. */
+/** Demo accounts. Every demo PIN is 2580. */
+const demoConsents = () => ({ noticeVersion: NOTICE_VERSION, orderSharing: true, marketing: false, at: ago(40 * DAY) });
+
 export const seedUsers = (): User[] => [
   {
     id: 'u-priya',
     name: 'Priya Sharma',
     phone: '9000012345',
-    pinHash: '2fa199e41c73e72b0baf77b8fe0f46c07e73e72ef35695f04c7430b5a6a710a3',
+    pinHash: 'e8a2c1bca74b4bec9d928933354cd152d2176ad2cdf9646e94eb4ff7a13a99bb',
     role: 'customer',
     address: 'Flat 4B, Sai Residency, FC Road',
     createdAt: ago(40 * DAY),
+    isAdult: true,
+    consents: demoConsents(),
   },
   {
     id: 'u-kamala',
     name: 'Kamala Joshi',
     phone: '9820011111',
-    pinHash: '1b7ceff57258a1b2b1904846cd1ebb86fefb717887c7924cb967b4ca92b91985',
+    pinHash: 'ab992ed0bf0b8c57e6e743318180aea96c1777c91d533e1f6bc8bbbd6015381e',
     role: 'provider',
     address: 'Shivaji Nagar',
     providerId: DEMO_PROVIDER_ID,
     createdAt: ago(120 * DAY),
+    isAdult: true,
+    consents: demoConsents(),
   },
   {
     id: 'u-rahul',
     name: 'Rahul Verma',
     phone: '9000054321',
-    pinHash: 'b0b71d8d01ac75606a8b96a1d3f60bfd49d92f87973446438e21796f7809c28e',
+    pinHash: '730cb5c68f00b2e08596e7be8804e9798cd795c15c52054617f03aab531fe917',
     role: 'customer',
     address: 'Koregaon Park',
     createdAt: ago(12 * DAY),
+    isAdult: true,
+    consents: demoConsents(),
   },
   {
     id: 'u-neha',
     name: 'Neha Kulkarni',
     phone: '9000099887',
-    pinHash: 'cdf8aa4dea6d8134ab931fca58d011468425124c2c771561a96f68cff831008c',
+    pinHash: '486fd1c3cc969f1346f22e1645da63594fb88b8ab93a24373e56003d71550142',
     role: 'customer',
     address: 'Model Colony',
     createdAt: ago(30 * DAY),
+    isAdult: true,
+    consents: demoConsents(),
   },
 ];
-
-/** Default admin login: admin / Admin@123 — change it from the admin panel. */
-export const DEFAULT_ADMIN = {
-  username: 'admin',
-  passHash: '61ef8dc36850db1827e5d694fe8ae11153d0310c0edc502696e6cb57818af733',
-};
 
 export const seedOrders = (): Order[] => [
   {

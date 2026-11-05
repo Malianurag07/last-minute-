@@ -29,13 +29,13 @@ export default function Shop() {
   const updSvc = (id: string, patch: Partial<Service>) => setServices((l) => l.map((s) => (s.id === id ? { ...s, ...patch } : s)));
   const unused = cat.templates.filter((tp) => !services.some((s) => s.name === tp.name));
 
-  const save = () => {
-    updateProvider(me.id, { services, rushFee, openFrom, openTo, bio });
+  const save = async () => {
+    await updateProvider(me.id, { services, rushFee, openFrom, openTo, bio });
     router.back();
   };
 
   return (
-    <Screen footer={<Btn label={t('save')} icon="save" bg="green" fg="white" size="lg" disabled={!services.length} onPress={save} />}>
+    <Screen footer={<Btn label={t('save')} icon="save" bg="green" size="lg" disabled={!services.length} onPress={save} />}>
       <Header title={t('myShop')} sub={`${me.name} · ${cat.name}`} speak="Here you can change your prices, add new work, and set your working hours. Press the green Save button at the bottom when done." />
 
       <Section title={t('services')}>

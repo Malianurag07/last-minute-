@@ -47,7 +47,7 @@ export default function ProviderHome() {
       </View>
 
       {me.suspended ? (
-        <Card bg="pink" inner={{ padding: 14, flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+        <Card bg="danger" inner={{ padding: 14, flexDirection: 'row', gap: 12, alignItems: 'center' }}>
           <Ionicons name="pause-circle" size={30} color={colors.white} />
           <Txt v="label" color="white" style={{ flex: 1 }}>
             Your shop is paused by our team, so customers can’t see it. Please call the helpline.
@@ -66,6 +66,7 @@ export default function ProviderHome() {
       <Pressable
         accessibilityRole="switch"
         accessibilityState={{ checked: me.available }}
+        aria-checked={me.available}
         onPress={() => {
           tap();
           updateProvider(me.id, { available: !me.available });
@@ -202,7 +203,7 @@ function RequestCard({ o }: { o: Order }) {
 
 function Tile({ icon, bg, label, value, onPress }: { icon: IconName; bg: ColorName; label: string; value: string; onPress: () => void }) {
   return (
-    <PressCard onPress={onPress} accessibilityLabel={`${label}: ${value}`} inner={{ padding: 14, gap: 10, minHeight: 128 }}>
+    <PressCard onPress={onPress} inner={{ padding: 14, gap: 10, minHeight: 128 }}>
       <IconBox icon={icon} bg={bg} size={44} color={bg === 'purple' || bg === 'pink' ? 'white' : 'ink'} />
       <View>
         <Txt v="h1">{value}</Txt>
@@ -216,12 +217,12 @@ function Tile({ icon, bg, label, value, onPress }: { icon: IconName; bg: ColorNa
 
 function BigTile({ icon, bg, label, value, onPress }: { icon: IconName; bg: ColorName; label: string; value: number | string; onPress: () => void }) {
   return (
-    <PressCard bg={bg} onPress={onPress} accessibilityLabel={`${label}: ${value}`} inner={{ padding: 18, flexDirection: 'row', alignItems: 'center', gap: 16, minHeight: 100 }}>
+    <PressCard bg={bg} onPress={onPress} inner={{ padding: 18, flexDirection: 'row', alignItems: 'center', gap: 16, minHeight: 100 }}>
       <IconBox icon={icon} bg="white" size={64} />
-      <Txt v="h2" style={{ flex: 1 }} color={bg === 'pink' ? 'white' : 'ink'}>
+      <Txt v="h2" style={{ flex: 1 }} color="ink">
         {label}
       </Txt>
-      <Txt v="display" color={bg === 'pink' ? 'white' : 'ink'}>
+      <Txt v="display" color="ink">
         {value}
       </Txt>
     </PressCard>

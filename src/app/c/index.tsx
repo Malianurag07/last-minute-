@@ -109,7 +109,7 @@ export default function CustomerHome() {
       </Section>
 
       <Section title="How it works">
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 8, paddingBottom: 6 }}>
+        <ScrollView horizontal focusable accessibilityLabel="How it works, 3 steps" showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 8, paddingBottom: 6 }}>
           <Step n={1} icon="search" bg="yellow" title="Find" text="Pick a local expert who can do it in time." />
           <Step n={2} icon="bicycle" bg="pink" title="Send" text="We compare Porter, Uber, Rapido & Ola for the cheapest reliable pickup." />
           <Step n={3} icon="checkmark-done" bg="green" title="Done" text="Track progress and get it back before your deadline." />
@@ -134,7 +134,7 @@ function Step({ n, icon, bg, title, text }: { n: number; icon: IconName; bg: 'ye
     <Card style={{ width: 200 }} inner={{ padding: 14, gap: 8, minHeight: 160 }}>
       <Row style={{ justifyContent: 'space-between' }}>
         <IconBox icon={icon} bg={bg} size={44} />
-        <Txt v="h1" color="line">
+        <Txt v="h1" color="muted">
           {n}
         </Txt>
       </Row>

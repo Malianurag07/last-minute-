@@ -9,6 +9,7 @@ import { Header } from '../../components/Header';
 import { JobActions } from '../../components/JobActions';
 import { Btn, Card, Empty, IconBox, Row, Screen, Section, Stars, Txt } from '../../components/ui';
 import { clock, dayLabel, rupees, timeLeft } from '../../lib/format';
+import { providerPayout } from '../../lib/pricing';
 import { useStore } from '../../state/store';
 import { colors } from '../../theme';
 
@@ -30,7 +31,7 @@ export default function Job() {
     );
   }
   const st = STATUS[o.status];
-  const speak = `${o.serviceName} for ${o.customerName}. Needed ${dayLabel(o.needBy)} at ${clock(o.needBy)}, ${timeLeft(o.needBy)}. You will get ${o.price + o.rushFee} rupees. ${o.notes ? `Note: ${o.notes}` : ''} Status: ${st.label}.`;
+  const speak = `${o.serviceName} for ${o.customerName}. Needed ${dayLabel(o.needBy)} at ${clock(o.needBy)}, ${timeLeft(o.needBy)}. You will get ${providerPayout(o)} rupees. ${o.notes ? `Note: ${o.notes}` : ''} Status: ${st.label}.`;
 
   return (
     <Screen>
@@ -110,9 +111,13 @@ export default function Job() {
             </Row>
           ) : null}
           <Row style={{ justifyContent: 'space-between' }}>
+            <Txt>LastMinute fee</Txt>
+            <Txt v="label">−{rupees(o.price + o.rushFee - providerPayout(o))}</Txt>
+          </Row>
+          <Row style={{ justifyContent: 'space-between' }}>
             <Txt v="h3">You get</Txt>
             <Txt v="h2" color="success">
-              {rupees(o.price + o.rushFee)}
+              {rupees(providerPayout(o))}
             </Txt>
           </Row>
           <Txt v="small" color="muted">

@@ -9,6 +9,7 @@ import { hashPin, LOCK_MINUTES, MAX_ATTEMPTS, normalizePhone } from '../lib/auth
 import { translate, type StrKey } from '../lib/i18n';
 import { newId as uid } from '../lib/id';
 import { NOTICE_VERSION } from '../lib/privacy';
+import { commissionFor, PRICING } from '../lib/pricing';
 import { type as typeScale, type TypeVariant } from '../theme';
 import { loadAll, loadProvider, toProvider } from './remote';
 
@@ -396,7 +397,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           return null;
         }
         const order: Order = {
-          ...o, id: uid('o'), customerId: user?.id ?? '', customerName: user?.name ?? 'Customer', customerPhone: user ? `+91 ${user.phone}` : '',
+          ...o, platformFee: PRICING.platformFee, commission: commissionFor(o.price, o.rushFee), id: uid('o'), customerId: user?.id ?? '', customerName: user?.name ?? 'Customer', customerPhone: user ? `+91 ${user.phone}` : '',
           createdAt: now(), status: 'requested', history: [{ status: 'requested', at: now() }],
         };
         patch((s) => ({ orders: [order, ...s.orders] }));

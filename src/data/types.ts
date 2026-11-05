@@ -125,6 +125,10 @@ export interface Order {
   price: number;
   rushFee: number;
   deliveryFee: number;
+  /** convenience fee paid by the customer */
+  platformFee?: number;
+  /** LastMinute's commission (deducted from the provider payout) */
+  commission?: number;
   /** ISO time the customer needs it by */
   needBy: string;
   createdAt: string;

@@ -1,0 +1,13 @@
+@font-face { font-family: 'Inter'; font-weight: 800; src: url('fonts/inter-latin-800-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 900; src: url('fonts/inter-latin-900-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 600; src: url('fonts/inter-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Hind'; font-weight: 700; src: url('fonts/hind-devanagari-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Hind'; font-weight: 600; src: url('fonts/hind-devanagari-600-normal.woff2') format('woff2'); }
+html, body { margin: 0; padding: 0; background: #111; }
+#stage { position: relative; overflow: hidden; font-family: Inter, Hind, sans-serif; color: #111; -webkit-font-smoothing: antialiased; }
+#stage * { box-sizing: border-box; }
+.h { font-weight: 900; letter-spacing: -0.03em; line-height: 1.02; }
+.b { font-weight: 800; }
+.m { font-weight: 600; }
+.chip { display: inline-block; border: 4px solid #111; border-radius: 999px; padding: 6px 22px; font-weight: 900; background: #fff; }
+.tag { display: inline-block; border: 3px solid #111; border-radius: 10px; padding: 2px 12px; font-weight: 900; font-size: 22px; letter-spacing: 0.04em; }

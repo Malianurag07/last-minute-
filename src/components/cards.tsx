@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { categoryById } from '../data/categories';
 import type { Order, OrderStatus, Provider } from '../data/types';
 import { clock, dayLabel, duration, isOpenNow, minutesUntil, rupees, timeLeft } from '../lib/format';
+import { customerTotal } from '../lib/pricing';
 import { useStore } from '../state/store';
 import { border, colors, type ColorName } from '../theme';
 import { Badge, IconBox, PressCard, Row, Stars, Txt, type IconName } from './ui';
@@ -98,7 +99,7 @@ export function OrderCard({ o, title, onPress }: { o: Order; title: string; onPr
             {title}
           </Txt>
         </View>
-        <Txt v="h3">{rupees(o.price + o.rushFee + o.deliveryFee)}</Txt>
+        <Txt v="h3">{rupees(customerTotal(o))}</Txt>
       </Row>
       <Row gap={8} style={{ flexWrap: 'wrap' }}>
         <StatusPill status={o.status} />

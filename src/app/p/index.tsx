@@ -8,6 +8,7 @@ import { Card, Grid, IconBox, IconBtn, PressCard, Row, Screen, Section, SpeakBtn
 import type { Order } from '../../data/types';
 import { HELPLINE } from '../../lib/constants';
 import { clock, dayLabel, minutesUntil, rupees, timeLeft } from '../../lib/format';
+import { providerPayout } from '../../lib/pricing';
 import { useStore } from '../../state/store';
 import { border, colors, type ColorName } from '../../theme';
 
@@ -21,7 +22,7 @@ export default function ProviderHome() {
   const active = mine.filter((o) => ['accepted', 'pickup', 'working', 'ready'].includes(o.status));
   const earned = mine
     .filter((o) => o.status === 'delivered' && new Date(o.createdAt).getTime() > weekAgo)
-    .reduce((s, o) => s + o.price + o.rushFee, 0);
+    .reduce((s, o) => s + providerPayout(o), 0);
   const firstName = me.name.split(/[ ']/)[0];
 
   const summary =
@@ -170,7 +171,7 @@ function RequestCard({ o }: { o: Order }) {
             {o.serviceName}
           </Txt>
           <Txt v="h2" color="success">
-            {rupees(o.price + o.rushFee)}
+            {rupees(providerPayout(o))}
           </Txt>
         </Row>
         <Row gap={6}>
@@ -194,7 +195,7 @@ function RequestCard({ o }: { o: Order }) {
         ) : null}
       </Pressable>
       <SpeakBtn
-        text={`New order. ${o.customerName} needs ${o.serviceName}, ${timeLeft(o.needBy)}. Price ${o.price + o.rushFee} rupees. ${o.notes}`}
+        text={`New order. ${o.customerName} needs ${o.serviceName}, ${timeLeft(o.needBy)}. You get ${providerPayout(o)} rupees. ${o.notes}`}
       />
       <JobActions o={o} />
     </Card>

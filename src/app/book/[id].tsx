@@ -7,6 +7,7 @@ import { DeliveryCompare, useQuotes } from '../../components/DeliveryCompare';
 import { Header } from '../../components/Header';
 import { Btn, Card, Chip, Divider, Empty, Field, PressCard, Row, Screen, Section, Txt } from '../../components/ui';
 import { clock, dayLabel, duration, rupees } from '../../lib/format';
+import { PRICING } from '../../lib/pricing';
 import { useStore } from '../../state/store';
 import { colors } from '../../theme';
 
@@ -62,7 +63,7 @@ export default function Book() {
   const tooTight = svc.minutes + travel > minsAvailable;
   const rush = minsAvailable <= 180 ? p.rushFee : 0;
   const deliveryFee = handover === 'delivery' && quote ? quote.price : 0;
-  const total = svc.price + rush + deliveryFee;
+  const total = svc.price + rush + deliveryFee + PRICING.platformFee;
 
   const submit = async () => {
     setBusy(true);
@@ -175,6 +176,7 @@ export default function Book() {
         <Txt v="h3">Summary</Txt>
         <Line label={svc.name} value={rupees(svc.price)} />
         {rush ? <Line label="Rush fee (needed within 3 hrs)" value={rupees(rush)} /> : null}
+        <Line label="Convenience fee" value={rupees(PRICING.platformFee)} />
         {deliveryFee ? <Line label={`${quote?.partner.name} (pickup + drop)`} value={rupees(deliveryFee)} /> : null}
         <Divider />
         <Line label={t('total')} value={rupees(total)} bold />

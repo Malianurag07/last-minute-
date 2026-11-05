@@ -8,6 +8,7 @@ import { DeliveryCompare, handOffToPartner, useQuotes } from '../../components/D
 import { Header } from '../../components/Header';
 import { Btn, Card, Divider, Empty, Field, IconBox, Row, Screen, Section, Stars, Txt } from '../../components/ui';
 import { clock, dayLabel, rupees, timeLeft } from '../../lib/format';
+import { customerTotal } from '../../lib/pricing';
 import { useStore } from '../../state/store';
 import { colors } from '../../theme';
 
@@ -99,9 +100,10 @@ export default function OrderDetail() {
         <Card inner={{ padding: 16, gap: 10 }}>
           <Line icon="pricetag" label="Service" value={rupees(o.price)} />
           {o.rushFee ? <Line icon="flash" label="Rush fee" value={rupees(o.rushFee)} /> : null}
-          {o.deliveryFee ? <Line icon="bicycle" label={o.delivery?.partnerName ?? 'Delivery'} value={rupees(o.deliveryFee)} /> : null}
+          {o.platformFee ? <Line icon="receipt" label="Convenience fee" value={rupees(o.platformFee)} /> : null}
+          {o.deliveryFee ? <Line icon="bicycle" label={`${o.delivery?.partnerName ?? 'Delivery'} (paid in their app)`} value={rupees(o.deliveryFee)} /> : null}
           <Divider />
-          <Line icon="wallet" label={t('total')} value={rupees(o.price + o.rushFee + o.deliveryFee)} />
+          <Line icon="wallet" label={t('total')} value={rupees(customerTotal(o))} />
           {o.notes ? (
             <>
               <Divider />

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="base.css" />
+<style>#stage { width: 1080px; height: 1920px; } .hi { font-family: Hind, Inter, sans-serif; font-weight: 700; line-height: 1.15; }</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="lib.js"></script>
+<script>
+const { C, el, card, text, phone, anim, tap, backdrop, scene, onFrame, prog, ease } = V;
+const S = '../frames/screens/';
+const W = 1080, H = 1920;
+window.DURATION = 52;
+
+/** Hindi headline with English subtitle on a card. */
+const cap = (p, t0, t1, hi, en, { bg = C.white, top = 130, size = 76 } = {}) =>
+  anim(card({ left: '60px', top: `${top}px`, width: '960px', background: bg, padding: '28px 36px', borderRadius: '30px' },
+    `<div class="hi" style="font-size:${size}px">${hi}</div><div class="b" style="font-size:38px;margin-top:10px;color:${C.muted}">${en}</div>`, p), t0, t1, { from: { y: -40, s: 0.96 }, dur: 0.5, easing: 'back' });
+const ph = (p, t0, t1, src, scroll = [[0, 0]], y = 600, x = 215, w = 650) => anim(phone({ x, y, w, src: S + src, scroll, parent: p }), t0, t1, { from: { y: 160 }, dur: 0.55 });
+
+backdrop(W, H);
+
+/* 0 — hook */
+{
+  const s = scene(0, 4.8, { background: C.ink });
+  anim(text({ left: '80px', top: '600px', width: '920px', fontSize: '120px', color: C.yellow }, '<div class="hi">आपके हाथों में<br/>हुनर है?</div>', s), 0.2, null, { from: { s: 1.2, o: 0 }, dur: 0.5 });
+  anim(text({ left: '80px', top: '1000px', width: '920px', fontSize: '68px', color: C.white }, '<div class="h">Good with your hands?</div>', s), 1.6, null, { from: { y: 30 } });
+}
+
+/* 1 — who */
+{
+  const s = scene(4.6, 11.4);
+  cap(s, 4.8, null, 'सबके लिए जगह है', 'There’s a place for every skill', { bg: C.yellowSoft });
+  const trades = [['✂️', 'दर्ज़ी', 'Tailor', C.pinkSoft], ['🍲', 'घर का खाना', 'Home food', C.orange], ['🎂', 'केक', 'Cakes', C.purpleSoft], ['✋', 'मेहंदी', 'Mehendi', C.greenSoft], ['👔', 'कपड़े प्रेस', 'Ironing', C.blueSoft], ['🛠️', 'रिपेयर', 'Repairs', C.yellow], ['💄', 'ब्यूटी', 'Beauty', C.pinkSoft], ['📚', 'ट्यूशन', 'Tuition', C.purpleSoft]];
+  trades.forEach(([ic, hi, en, bg], i) => anim(card({ left: `${70 + (i % 2) * 480}px`, top: `${470 + Math.floor(i / 2) * 330}px`, width: '450px', height: '290px', background: bg, padding: '24px 30px' },
+    `<div style="font-size:84px">${ic}</div><div class="hi" style="font-size:64px;margin-top:6px">${hi}</div><div class="b" style="font-size:34px">${en}</div>`, s), 5.4 + i * 0.35, null, { from: { s: 0.7, o: 0 }, dur: 0.45, easing: 'back' }));
+}
+
+/* 2 — earn from home */
+{
+  const s = scene(11.2, 18.4);
+  cap(s, 11.4, null, 'दुकान की ज़रूरत नहीं।<br/>घर से कमाइए।', 'No shop needed. Earn from home.', { bg: C.greenSoft, size: 70 });
+  ph(s, 11.6, null, '29-provider-easy-hindi.png', [[11.7, 0], [14, 0], [18, 500]], 640);
+}
+
+/* 3 — easy sign-up */
+{
+  const s = scene(18.2, 26.4);
+  cap(s, 18.4, null, 'बस 5 आसान कदम', 'Sign up in 5 easy steps — one question per screen', { bg: C.yellow });
+  ph(s, 18.6, 22.4, '40-join-category.png', [[18.7, 0], [21.5, 200]], 560);
+  ph(s, 22.2, null, '41-join-services.png', [[22.3, 0]], 560);
+  cap(s, 22.4, null, 'दाम + और − से', 'Set prices with big + and − buttons', { bg: C.pinkSoft, top: 1620, size: 64 });
+  tap(215 + 521, 1154, 23.6, s);
+  tap(215 + 521, 1154, 24.4, s);
+}
+
+/* 4 — big buttons + read aloud */
+{
+  const s = scene(26.2, 33.4);
+  cap(s, 26.4, null, 'बड़े बटन · हिंदी · सुनकर समझिए', 'Big buttons · Hindi · Read-aloud', { bg: C.purpleSoft, size: 64 });
+  ph(s, 26.6, null, '20-provider-home.png', [[26.7, 0], [28.5, 0], [31, 470]], 560);
+  tap(215 + 470, 560 + 1240 - 470 * 1.026 + 330, 32.2, s);
+}
+
+/* 5 — accept, rider */
+{
+  const s = scene(33.2, 40.4);
+  cap(s, 33.4, 36.8, 'ऑर्डर आया? ‘हाँ’ दबाइए।', 'New order? Tap “Accept”.', { bg: C.greenSoft });
+  cap(s, 36.8, null, 'राइडर हम ढूँढ देते हैं', 'We find the cheapest reliable rider', { bg: C.blueSoft });
+  ph(s, 33.6, null, '25-job-ready-drop.png', [[33.7, 0], [36.6, 0], [39.6, 560]], 560);
+}
+
+/* 6 — money */
+{
+  const s = scene(40.2, 46.6, { background: C.yellow });
+  cap(s, 40.4, null, 'कमाई साफ़-साफ़', 'Clear, fair earnings', { bg: C.white });
+  const pts = [
+    ['5%', 'पहले 3 महीने सिर्फ़ 5% फ़ीस', 'Only 5% fee for your first 3 months (then 12%)', C.greenSoft],
+    ['80%', 'जल्दी वाले ऑर्डर का 80% आपका', 'You keep 80% of every rush fee', C.pinkSoft],
+    ['₹', 'काम के बाद पेमेंट — UPI या नकद', 'Customer pays after the work — UPI or cash', C.blueSoft],
+  ];
+  pts.forEach(([big, hi, en, bg], i) => anim(card({ left: '60px', top: `${480 + i * 400}px`, width: '960px', height: '350px', background: bg, padding: '30px 36px' },
+    `<div style="display:flex;gap:30px;align-items:center"><div class="h" style="font-size:92px;min-width:250px;text-align:center">${big}</div><div><div class="hi" style="font-size:54px">${hi}</div><div class="b" style="font-size:32px;margin-top:8px">${en}</div></div></div>`, s), 41 + i * 1.1, null, { from: { x: 80 }, dur: 0.5 }));
+}
+
+/* 7 — CTA */
+{
+  const s = scene(46.4, 52, { background: C.yellow });
+  anim(card({ left: '70px', top: '360px', width: '940px', height: '1180px', background: C.paper, borderRadius: '44px', boxShadow: `18px 18px 0 ${C.ink}` }, `
+    <div style="display:flex;align-items:center;gap:22px;font-size:56px"><span style="width:100px;height:100px;border:5px solid #111;border-radius:24px;background:${C.yellow};display:flex;align-items:center;justify-content:center;font-size:64px">⚡</span><span class="h">LastMinute</span></div>
+    <div class="hi" style="font-size:96px;margin-top:50px">आज ही मुफ़्त जुड़िए</div>
+    <div class="h" style="font-size:66px;margin-top:10px">Become a partner — free</div>
+    <div class="b" style="font-size:38px;margin-top:44px;line-height:1.45">1. Download LastMinute<br/>2. Tap “मैं सेवा देता/देती हूँ”<br/>3. Get orders from your neighbourhood</div>
+    <div class="b" style="font-size:32px;margin-top:40px;color:${C.muted}">Need help? Our team can set up your shop on a phone call.</div>`, s), 46.6, null, { from: { y: 120, s: 0.9 }, dur: 0.6, easing: 'back' });
+}
+</script>
+</body>
+</html>

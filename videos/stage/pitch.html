@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="base.css" />
+<style>#stage { width: 1920px; height: 1080px; }</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="lib.js"></script>
+<script>
+const { C, el, card, text, phone, anim, tap, counter, backdrop, scene, onFrame, prog, ease, lerp } = V;
+const S = '../frames/screens/';
+const W = 1920, H = 1080;
+window.DURATION = 262;
+
+/* ------------------------------------------------------------ helpers */
+const kicker = (p, t0, t1, label, bg = C.pink, x = 900, y = 120) => anim(text({ left: `${x}px`, top: `${y}px`, fontSize: '30px' }, `<span class="chip" style="background:${bg}">${label}</span>`, p), t0, t1, { from: { x: -30 } });
+const heading = (p, t0, t1, html, { x = 900, y = 190, size = 78, w = 900 } = {}) => anim(text({ left: `${x}px`, top: `${y}px`, width: `${w}px`, fontSize: `${size}px` }, `<div class="h">${html}</div>`, p), t0, t1, { from: { y: 50 } });
+const bullet = (p, t0, t1, html, y, { x = 900, icon = '✓', bg = C.green, size = 36, w = 880 } = {}) =>
+  anim(text({ left: `${x}px`, top: `${y}px`, width: `${w}px`, fontSize: `${size}px`, display: 'flex', gap: '22px', alignItems: 'flex-start' },
+    `<span style="flex:none;width:56px;height:56px;border:4px solid ${C.ink};border-radius:14px;background:${bg};display:flex;align-items:center;justify-content:center;font-weight:900;font-size:30px">${icon}</span><span class="b" style="padding-top:6px;line-height:1.25">${html}</span>`, p), t0, t1, { from: { x: 40 } });
+const note = (p, t0, t1, html, y = 980, x = 900) => anim(text({ left: `${x}px`, top: `${y}px`, fontSize: '24px', color: C.ink, opacity: 0.8 }, `<span class="m">${html}</span>`, p), t0, t1, { from: { y: 10 } });
+/** phone on the left that pans through a tall screenshot */
+const ph = (p, t0, t1, src, scroll = [[0, 0]], x = 300, y = 64, w = 430) => anim(phone({ x, y, w, src: S + src, scroll, parent: p }), t0, t1, { from: { y: 120, r: -3 }, dur: 0.7 });
+const progress = (p, t0, t1, n, total = 6) => {
+  const labels = ['Sign up', 'Find', 'Book', 'Accept', 'Make', 'Deliver'];
+  const g = text({ right: '60px', top: '36px', display: 'flex', gap: '10px', fontSize: '20px' }, labels.map((l, i) => `<span class="tag" style="background:${i < n ? C.ink : C.white};color:${i < n ? C.white : C.ink}">${i + 1}. ${l}</span>`).join(''), p);
+  anim(g, t0, t1, { from: { y: -10 } });
+};
+
+backdrop(W, H, { side: 'left' });
+const plain = { background: C.yellow };
+
+/* 0 — title ------------------------------------------------------------ */
+{
+  const s = scene(0, 7.2);
+  const c = anim(card({ left: '360px', top: '220px', width: '1200px', height: '640px', background: C.paper, borderRadius: '44px', boxShadow: `18px 18px 0 ${C.ink}` }, '', s), 0.2, null, { from: { y: 80, s: 0.94 }, dur: 0.8 });
+  text({ left: '70px', top: '70px', display: 'flex', alignItems: 'center', gap: '22px', fontSize: '44px' }, `<span style="width:84px;height:84px;border:5px solid ${C.ink};border-radius:20px;background:${C.yellow};display:flex;align-items:center;justify-content:center;font-size:52px">⚡</span><span class="h">LastMinute</span>`, c);
+  anim(text({ left: '70px', top: '210px', fontSize: '128px' }, '<div class="h">Need it now?<br/>Get it done.</div>', c), 0.9, null, { from: { y: 40 } });
+  anim(text({ left: '74px', top: '500px', fontSize: '34px', color: C.muted }, '<span class="b">Investor pitch · Last-minute services from home-based experts</span>', c), 1.8, null);
+}
+
+/* 1 — the moment ------------------------------------------------------- */
+{
+  const s = scene(7, 19.5, { background: C.ink });
+  const lines = [
+    [7.4, '8:00 PM — the wedding.', C.white],
+    [9.6, '4:30 PM — the blouse doesn’t fit.', C.yellow],
+    [12.4, 'Every tailor in the market says “come tomorrow”.', C.white],
+    [15.6, 'Who can fix it <span style="color:#FF4F7B">today</span>?', C.white],
+  ];
+  lines.forEach(([t0, html, col], i) => anim(text({ left: '160px', top: `${180 + i * 170}px`, fontSize: i === 3 ? '96px' : '72px', color: col, width: '1600px' }, `<div class="h">${html}</div>`, s), t0, null, { from: { x: -60 } }));
+}
+
+/* 2 — problem + market ---------------------------------------------- */
+{
+  const s = scene(19.2, 34, plain);
+  anim(text({ left: '120px', top: '90px', fontSize: '30px' }, `<span class="chip" style="background:${C.pink}">The problem</span>`, s), 19.5, null);
+  anim(text({ left: '120px', top: '160px', fontSize: '76px', width: '1600px' }, '<div class="h">Urgent jobs happen every day.<br/>The people who can do them are invisible.</div>', s), 19.8, null);
+  const probs = [
+    ['⏰', 'Urgent, small jobs', 'Blouse before a wedding, cake tonight, zip before a flight.', C.yellowSoft],
+    ['🏠', 'Hidden home experts', 'Tailors, bakers, cooks, mehendi & repair people work from home — no shop, no online presence. Many are older.', C.pinkSoft],
+    ['🛵', 'Moving the item', 'Which of Rapido, Porter, Uber, Ola is cheapest and reliable right now?', C.blueSoft],
+  ];
+  probs.forEach(([ic, h, p, bg], i) => anim(card({ left: `${120 + i * 575}px`, top: '420px', width: '535px', height: '330px', background: bg }, `<div style="font-size:54px">${ic}</div><div class="h" style="font-size:42px;margin:14px 0 12px">${h}</div><div class="m" style="font-size:28px;line-height:1.35">${p}</div>`, s), 21 + i * 1.4, null, { from: { y: 80 } }));
+  anim(card({ left: '120px', top: '800px', width: '1680px', height: '170px', background: C.ink, color: C.white, boxShadow: `12px 12px 0 ${C.purple}` },
+    `<div style="display:flex;align-items:center;gap:40px;color:#fff"><div class="h" style="font-size:64px;color:${C.yellow}">7.7M → 23.5M</div><div class="b" style="font-size:30px;line-height:1.3">India’s gig & platform workforce, 2020-21 → projected 2029-30.<br/><span class="m" style="opacity:.8;font-size:24px">Source: NITI Aayog, “India’s Booming Gig and Platform Economy” (2022)</span></div></div>`, s), 26, null, { from: { y: 60 } });
+}
+
+/* 3 — solution -------------------------------------------------------- */
+{
+  const s = scene(33.7, 46);
+  ph(s, 34, null, '01-welcome.png', [[34, 0], [44, 130]]);
+  kicker(s, 34.3, null, 'The solution', C.green);
+  heading(s, 34.6, null, 'One app for “I need it now”.');
+  bullet(s, 36, null, 'Find a <u>home-based expert nearby</u> who can finish before your deadline.', 420);
+  bullet(s, 37.6, null, 'We compare <b>Rapido · Porter · Uber · Ola</b> and book the cheapest reliable rider.', 560, { bg: C.white, icon: '⚡' });
+  bullet(s, 39.2, null, 'Built for older providers: <b>big buttons, Hindi, read-aloud</b>, 5-step sign-up.', 700, { bg: C.pink, icon: '♥' });
+  note(s, 41, null, 'Live demo of the real app follows →');
+}
+
+/* 4 — sign up (privacy by design) ----------------------------------- */
+{
+  const s = scene(45.7, 60);
+  anim(phone({ x: 120, y: 64, w: 400, src: S + '03-consent.png', scroll: [[46, 0], [53, 420]], parent: s }), 46, null, { from: { y: 120 } });
+  anim(phone({ x: 600, y: 64, w: 400, src: S + '04-otp.png', parent: s }), 47.2, null, { from: { y: 120 } });
+  progress(s, 46, null, 1);
+  kicker(s, 46.3, null, 'Step 1 · Sign up in a minute', C.yellow, 1110, 130);
+  heading(s, 46.6, null, 'Private by design.', { x: 1110, w: 760, size: 72 });
+  bullet(s, 48, null, 'Plain-language privacy notice in English & Hindi', 360, { x: 1110, w: 740, size: 32 });
+  bullet(s, 49.4, null, '18+ check and separate consents (marketing is optional)', 480, { x: 1110, w: 740, size: 32 });
+  bullet(s, 50.8, null, 'SMS code + 4-digit PIN on a big keypad', 600, { x: 1110, w: 740, size: 32, bg: C.yellow, icon: '🔒' });
+  bullet(s, 52.2, null, 'New phone? It asks for an SMS code again', 720, { x: 1110, w: 740, size: 32, bg: C.blueSoft, icon: '📱' });
+}
+
+/* 5 — find ------------------------------------------------------------- */
+{
+  const s = scene(59.7, 84);
+  ph(s, 60, 71.6, '10-home.png', [[60.5, 0], [64, 0], [69, 640]]);
+  ph(s, 71.4, null, '12-provider.png', [[72, 0], [80, 760]]);
+  progress(s, 60, null, 2);
+  kicker(s, 60.3, null, 'Step 2 · Find', C.yellow);
+  heading(s, 60.6, 71.6, 'Ten kinds of home experts, near you.');
+  bullet(s, 62, 71.6, 'Tailoring, home food, cakes, mehendi, ironing, repairs, beauty, gifts, tuition, electronics', 420, { icon: '🔎', bg: C.yellow });
+  bullet(s, 64, 71.6, 'The yellow <b>Urgent</b> button shows only who can finish <b>within 2 hours</b>', 590, { icon: '⚡', bg: C.pink });
+  heading(s, 71.8, null, 'Trust before you book.');
+  bullet(s, 73, null, 'Ratings & real reviews from completed orders only', 420);
+  bullet(s, 74.6, null, '<b>Verified</b> badge after a phone/ID check by our team', 560, { icon: '🛡', bg: C.greenSoft });
+  bullet(s, 76.2, null, 'Open hours, “ready in” times and the rush fee — upfront', 700, { icon: '⏱', bg: C.yellowSoft });
+}
+
+/* 6 — book + delivery compare ----------------------------------------- */
+{
+  const s = scene(83.7, 104);
+  ph(s, 84, null, '13-booking.png', [[84.5, 0], [87, 0], [90, 430], [93, 430], [97, 1130], [100.5, 1130], [103, 1720]]);
+  progress(s, 84, null, 3);
+  kicker(s, 84.3, null, 'Step 3 · Book', C.yellow);
+  heading(s, 84.6, null, 'Choose, set a deadline, send.');
+  bullet(s, 85.8, null, 'Pick the service & price', 400, { icon: '1', bg: C.white });
+  bullet(s, 88.5, null, 'Pick a deadline — a warning shows if it’s too tight', 510, { icon: '2', bg: C.white });
+  bullet(s, 93.5, null, '<b>Delivery compared live</b>: ranked 50% reliability · 30% price · 20% speed', 640, { icon: '3', bg: C.yellow });
+  bullet(s, 98, null, 'Customer pays after the work — UPI or cash', 800, { icon: '₹', bg: C.greenSoft });
+  note(s, 94, null, 'Fares are estimates from each partner’s published rates; booking opens their app with addresses copied.', 960);
+}
+
+/* 7 — provider accepts ------------------------------------------------ */
+{
+  const s = scene(103.7, 122);
+  ph(s, 104, 113.6, '14-order-requested.png', [[104.5, 0], [110, 300]]);
+  ph(s, 113.4, null, '20-provider-home.png', [[114, 0], [116, 0], [119, 480]]);
+  tap(300 + 330, 64 + 560, 120.4, s);
+  progress(s, 104, null, 4);
+  kicker(s, 104.3, 113.6, 'Order sent', C.green);
+  heading(s, 104.6, 113.6, 'The nearby expert gets it instantly.');
+  bullet(s, 106.2, 113.6, 'Customer sees live status: waiting → accepted → pickup → work → ready → done', 420, { icon: '●', bg: C.yellow });
+  kicker(s, 113.8, null, 'Step 4 · Accept', C.yellow);
+  heading(s, 114.1, null, 'Kamala Aunty, 63, taps “Accept”.');
+  bullet(s, 115.6, null, 'One huge Accept / Decline — “No” always asks again', 420, { icon: '✓', bg: C.green });
+  bullet(s, 117.2, null, '<b>Read aloud</b> speaks the order in Hindi or English', 560, { icon: '🔊', bg: C.purpleSoft });
+  bullet(s, 118.8, null, 'Easy mode: bigger text, fewer choices', 700, { icon: 'A+', bg: C.white, size: 34 });
+}
+
+/* 8 — make & ship ----------------------------------------------------- */
+{
+  const s = scene(121.7, 146);
+  anim(phone({ x: 90, y: 120, w: 360, src: S + '22-customer-book-pickup.png', scroll: [[122, 0]], parent: s }), 122, null, { from: { y: 120 } });
+  anim(phone({ x: 520, y: 120, w: 360, src: S + '24-job-working.png', parent: s }), 126, null, { from: { y: 120 } });
+  anim(phone({ x: 950, y: 120, w: 360, src: S + '25-job-ready-drop.png', scroll: [[130, 0], [134, 0], [138, 520]], parent: s }), 130, null, { from: { y: 120 } });
+  progress(s, 122, null, 5);
+  const steps = [
+    [122.6, 'Customer books the pickup rider', C.yellow],
+    [126.6, 'Provider: “Start work” → “Work is ready”', C.purpleSoft],
+    [130.6, 'Provider books the rider back — cheapest reliable first', C.greenSoft],
+  ];
+  steps.forEach(([t0, h, bg], i) => anim(card({ left: '1400px', top: `${170 + i * 260}px`, width: '450px', height: '220px', background: bg, padding: '24px' }, `<div class="h" style="font-size:52px">${i + 1}</div><div class="b" style="font-size:30px;line-height:1.25;margin-top:6px">${h}</div>`, s), t0, null, { from: { x: 60 } }));
+}
+
+/* 9 — done + review --------------------------------------------------- */
+{
+  const s = scene(145.7, 158);
+  anim(phone({ x: 200, y: 64, w: 420, src: S + '26-job-delivered.png', scroll: [[146, 0], [152, 500]], parent: s }), 146, null, { from: { y: 120 } });
+  anim(phone({ x: 700, y: 64, w: 420, src: S + '30-review.png', parent: s }), 147.5, null, { from: { y: 120 } });
+  progress(s, 146, null, 6);
+  kicker(s, 146.3, null, 'Step 6 · Delivered', C.green, 1220, 140);
+  heading(s, 146.6, null, 'Done before the party.', { x: 1220, w: 640, size: 70 });
+  bullet(s, 148.5, null, 'Provider earns ₹436 on a ₹450 + rush job', 420, { x: 1220, w: 640, size: 32, icon: '₹', bg: C.greenSoft });
+  bullet(s, 150, null, 'Customer rates — one review per real order', 560, { x: 1220, w: 640, size: 32, icon: '★', bg: C.yellow });
+  bullet(s, 151.5, null, 'After delivery the provider no longer sees the customer’s number', 700, { x: 1220, w: 640, size: 32, icon: '🔒', bg: C.blueSoft });
+}
+
+/* 10 — provider dashboard & partners ---------------------------------- */
+{
+  const s = scene(157.7, 170);
+  anim(phone({ x: 200, y: 64, w: 420, src: S + '27-dashboard.png', scroll: [[158, 0], [165, 700]], parent: s }), 158, null, { from: { y: 120 } });
+  anim(phone({ x: 700, y: 64, w: 420, src: S + '28-partners.png', scroll: [[159.5, 0], [166, 500]], parent: s }), 159.5, null, { from: { y: 120 } });
+  kicker(s, 158.3, null, 'For providers', C.pink, 1220, 140);
+  heading(s, 158.6, null, 'A dashboard and a community.', { x: 1220, w: 640, size: 64 });
+  bullet(s, 160.5, null, 'Profile visits, earnings, acceptance rate, ratings', 420, { x: 1220, w: 640, size: 32, icon: '📈', bg: C.yellow });
+  bullet(s, 162, null, 'Find other makers & collaborate: tailor + mehendi + beauty for one bride', 580, { x: 1220, w: 640, size: 32, icon: '🤝', bg: C.purpleSoft });
+}
+
+/* 11 — trust & safety ------------------------------------------------- */
+{
+  const s = scene(169.7, 186, plain);
+  anim(phone({ x: 90, y: 64, w: 410, src: S + '31-privacy.png', scroll: [[170, 0], [182, 1450]], parent: s }), 170, null, { from: { y: 120 } });
+  const browser = anim(card({ left: '580px', top: '120px', width: '780px', height: '520px', padding: '0', overflow: 'hidden', borderRadius: '20px' }, `<div style="height:44px;border-bottom:4px solid ${C.ink};background:${C.paper};display:flex;align-items:center;gap:10px;padding-left:16px"><span style="width:16px;height:16px;border-radius:50%;background:${C.pink};border:2px solid ${C.ink}"></span><span style="width:16px;height:16px;border-radius:50%;background:${C.yellow};border:2px solid ${C.ink}"></span><span style="width:16px;height:16px;border-radius:50%;background:${C.green};border:2px solid ${C.ink}"></span><span class="m" style="margin-left:16px;font-size:18px">Super Admin console · 2FA</span></div>`, s), 171.5, null, { from: { y: 80 } });
+  const shot = el('img', { position: 'absolute', top: '44px', left: '0', width: '100%' }, '', browser);
+  shot.src = S + 'console-overview.png';
+  onFrame((t) => { shot.src = S + (t > 178 ? 'console-audit.png' : 'console-overview.png'); });
+  kicker(s, 170.3, null, 'Trust & safety', C.blue, 580, 40);
+  const badges = [
+    ['🔐', 'Server decides everything', 'prices, permissions & order steps can’t be faked from the app'],
+    ['🧾', 'Tamper-evident audit log', 'every admin action needs a reason; edits are detected'],
+    ['🇮🇳', 'DPDP Act-ready', 'consent, download, correct, delete, nominee, grievance'],
+    ['♿', 'WCAG 2.2 AA tested', '0 automated issues on 27 screens'],
+  ];
+  badges.forEach(([ic, h, p], i) => anim(card({ left: `${1400}px`, top: `${110 + i * 230}px`, width: '470px', height: '200px', padding: '20px 24px', background: [C.yellowSoft, C.greenSoft, C.pinkSoft, C.blueSoft][i] }, `<div class="h" style="font-size:30px">${ic} ${h}</div><div class="m" style="font-size:22px;margin-top:8px;line-height:1.3">${p}</div>`, s), 172.5 + i * 1.2, null, { from: { x: 60 } }));
+  anim(text({ left: '580px', top: '690px', width: '780px', fontSize: '28px' }, '<div class="b">Admin login: password + authenticator app. Staff see masked phone numbers. 32 automated security tests on every build.</div>', s), 175, null);
+}
+
+/* 12 — money flow ----------------------------------------------------- */
+{
+  const s = scene(185.7, 204, plain);
+  kicker(s, 186, null, 'Business model', C.green, 120, 70);
+  heading(s, 186.3, null, 'How one ₹450 blouse makes money', { x: 120, y: 140, w: 1700, size: 70 });
+  const cust = anim(card({ left: '120px', top: '320px', width: '520px', height: '520px', background: C.white }, `<div class="b" style="font-size:30px">Customer pays</div>
+    <div style="font-size:30px;line-height:1.7;margin-top:12px" class="m">Service <b style="float:right">₹450</b><br/>Rush fee (due in 3 hrs) <b style="float:right">₹50</b><br/>Convenience fee <b style="float:right">₹9</b></div>
+    <div style="border-top:4px solid ${C.ink};margin-top:14px;padding-top:12px" class="h"><span style="font-size:40px">Total</span><span style="float:right;font-size:52px">₹509</span></div>
+    <div class="m" style="font-size:22px;margin-top:18px;color:${C.muted}">+ delivery, paid directly in the Rapido/Porter/Uber/Ola app (pass-through)</div>`, s), 187.5, null, { from: { x: -60 } });
+  void cust;
+  const arrow = (x, t0) => anim(text({ left: `${x}px`, top: '520px', fontSize: '90px' }, '<span class="h">→</span>', s), t0, null, { from: { x: -30 } });
+  arrow(680, 189.5);
+  anim(card({ left: '800px', top: '300px', width: '500px', height: '260px', background: C.greenSoft }, `<div class="b" style="font-size:30px">Provider receives</div><div class="h" style="font-size:96px;margin-top:6px">₹436</div><div class="m" style="font-size:21px">₹450 + ₹40 (80% of rush) − ₹54 commission</div>`, s), 190.5, null, { from: { y: 60 } });
+  anim(card({ left: '800px', top: '590px', width: '500px', height: '260px', background: C.white }, `<div class="b" style="font-size:30px">LastMinute earns</div><div class="h" style="font-size:96px;margin-top:6px">₹73</div><div class="m" style="font-size:21px">₹54 commission + ₹10 rush share + ₹9 fee</div>`, s), 192, null, { from: { y: 60 } });
+  const rates = [
+    ['12%', 'commission on service', '5% for a provider’s first 3 months'],
+    ['20%', 'of the rush fee', 'provider keeps 80% — urgency pays both'],
+    ['₹9', 'convenience fee', 'per order, paid by the customer'],
+  ];
+  rates.forEach(([big, h, p], i) => anim(card({ left: '1360px', top: `${320 + i * 180}px`, width: '450px', height: '160px', padding: '18px 26px' }, `<div style="display:flex;gap:18px;align-items:center"><div class="h" style="font-size:58px;min-width:120px">${big}</div><div><div class="b" style="font-size:26px">${h}</div><div class="m" style="font-size:20px;color:${C.muted}">${p}</div></div></div>`, s), 194 + i * 1.3, null, { from: { x: 60 } }));
+  note(s, 198, null, 'Later: Provider Pro ₹149/month · delivery partner margin 5–8% · bulk orders for boutiques & events', 920, 120);
+}
+
+/* 13 — unit economics + growth ---------------------------------------- */
+{
+  const s = scene(203.7, 226, plain);
+  kicker(s, 204, null, 'Unit economics & targets · planning assumptions', C.yellow, 120, 70);
+  heading(s, 204.3, null, '≈ ₹59 net revenue · ≈ ₹39 contribution per order', { x: 120, y: 140, w: 1700, size: 64 });
+  const rows = [['Average service price', '₹380'], ['Net revenue (≈15.5% of service)', '₹58.8'], ['Support, SMS, cloud', '−₹7.5'], ['Promotions (year 1)', '−₹12'], ['Contribution (≈67%)', '≈ ₹39']];
+  anim(card({ left: '120px', top: '300px', width: '760px', height: '520px' }, rows.map(([a, b], i) => `<div style="display:flex;justify-content:space-between;font-size:32px;padding:14px 0;border-bottom:${i < rows.length - 1 ? `3px solid #e4dfd3` : 'none'}" class="${i === rows.length - 1 ? 'h' : 'b'}"><span>${a}</span><span>${b}</span></div>`).join('') + `<div class="m" style="font-size:22px;margin-top:22px;color:${C.muted}">Customer CAC ≈ ₹120 · 1.8 orders/month → payback under 2 months</div>`, s), 205.5, null, { from: { x: -60 } });
+  const chart = anim(card({ left: '960px', top: '300px', width: '860px', height: '520px' }, `<div class="b" style="font-size:30px">Orders per month — one city</div>`, s), 207, null, { from: { x: 60 } });
+  const bars = [['M3', 2000, '₹1.2L'], ['M6', 8000, '₹4.7L'], ['M12', 25000, '₹14.7L']];
+  bars.forEach(([lab, v, rev], i) => {
+    const b = el('div', { position: 'absolute', left: `${70 + i * 260}px`, bottom: '90px', width: '170px', height: '0px', background: [C.pink, C.purple, C.green][i], border: `4px solid ${C.ink}`, borderRadius: '14px 14px 0 0' }, '', chart);
+    const val = el('div', { position: 'absolute', left: `${40 + i * 260}px`, width: '230px', textAlign: 'center', fontSize: '34px', fontWeight: 900 }, '', chart);
+    el('div', { position: 'absolute', left: `${40 + i * 260}px`, bottom: '40px', width: '230px', textAlign: 'center', fontSize: '24px', fontWeight: 800 }, `${lab} · <span style="font-weight:600">${rev} rev.</span>`, chart);
+    onFrame((t) => {
+      const p = ease.out(prog(t, 208 + i * 0.6, 1.4));
+      const h = Math.max(14, (v / 25000) * 300) * p;
+      b.style.height = `${h}px`;
+      val.style.bottom = `${100 + h}px`;
+      val.textContent = Math.round(v * p).toLocaleString('en-IN');
+    });
+  });
+  anim(card({ left: '120px', top: '860px', width: '1700px', height: '130px', background: C.ink, boxShadow: `12px 12px 0 ${C.purple}`, color: C.white }, `<div class="h" style="font-size:40px;color:${C.yellow}">Break-even ≈ 27,000 orders/month in one city <span style="color:#fff;font-size:28px" class="b">(≈ ₹10.5L fixed costs ÷ ₹39)</span></div>`, s), 212, null, { from: { y: 50 } });
+}
+
+/* 14 — why we win ------------------------------------------------------ */
+{
+  const s = scene(225.7, 242, plain);
+  kicker(s, 226, null, 'Why we win', C.pink, 120, 70);
+  heading(s, 226.3, null, 'Supply nobody else has. Urgency that pays.', { x: 120, y: 140, w: 1700, size: 66 });
+  const pts = [
+    ['🧵', 'Exclusive supply', 'Home-based, often older makers — onboarded in their language with an app made for them.'],
+    ['⚡', 'Urgency = margin', 'Rush fees make the last-minute moment profitable for maker and platform.'],
+    ['🪶', 'Asset-light', 'No fleet, no warehouse: delivery rides on existing networks.'],
+    ['🔁', 'Local network effects', 'More makers → faster jobs → more customers. Collaborations create bundles.'],
+  ];
+  pts.forEach(([ic, h, p], i) => anim(card({ left: `${120 + (i % 2) * 860}px`, top: `${290 + Math.floor(i / 2) * 230}px`, width: '820px', height: '200px', background: [C.yellowSoft, C.pinkSoft, C.greenSoft, C.blueSoft][i], padding: '22px 30px' }, `<div class="h" style="font-size:38px">${ic} ${h}</div><div class="m" style="font-size:26px;margin-top:10px;line-height:1.3">${p}</div>`, s), 227.5 + i * 1.1, null, { from: { y: 60 } }));
+  anim(card({ left: '120px', top: '780px', width: '1680px', height: '200px', padding: '20px 30px' }, `<div class="b" style="font-size:28px;margin-bottom:10px">Others solve a different problem</div><div class="m" style="font-size:24px;line-height:1.5"><b>Urban Company</b> — trained pros, scheduled visits · <b>Swiggy/Zomato</b> — restaurant food · <b>Justdial/Maps</b> — listings, no booking or deadline · <b>WhatsApp</b> — only your own circle.<br/><b>LastMinute</b> = home-based makers + a deadline promise + delivery compared for you.</div>`, s), 233, null, { from: { y: 50 } });
+}
+
+/* 15 — the ask --------------------------------------------------------- */
+{
+  const s = scene(241.7, 254, plain);
+  kicker(s, 242, null, 'The ask · illustrative', C.yellow, 120, 70);
+  heading(s, 242.3, null, '₹1.5 Cr pre-seed · 18 months', { x: 120, y: 140, w: 1700, size: 96 });
+  const uses = [['Team & product', 45, C.purple], ['Provider onboarding & customer growth', 30, C.pink], ['Trust, safety & compliance (pentest, ISO 27001, legal)', 10, C.green], ['Buffer', 15, C.yellow]];
+  uses.forEach(([lab, pct, col], i) => {
+    const row = anim(text({ left: '120px', top: `${330 + i * 120}px`, width: '1680px', height: '90px' }, '', s), 243.5 + i * 0.6, null, { from: { x: -40 } });
+    const bar = el('div', { position: 'absolute', left: '0', top: '10px', height: '70px', width: '0px', background: col, border: `4px solid ${C.ink}`, borderRadius: '14px' }, '', row);
+    const lbl = el('div', { position: 'absolute', left: '0', top: '18px', fontSize: '34px', fontWeight: 900, whiteSpace: 'nowrap' }, `${pct}% · ${lab}`, row);
+    onFrame((t) => { const w = (pct / 45) * 760 * ease.out(prog(t, 244 + i * 0.6, 1.2)); bar.style.width = `${w}px`; lbl.style.left = `${w + 24}px`; });
+  });
+  anim(text({ left: '120px', top: '840px', width: '1700px', fontSize: '36px' }, '<div class="h">Milestone: one city at break-even, second city launched.</div>', s), 247, null);
+}
+
+/* 16 — close ------------------------------------------------------------ */
+{
+  const s = scene(253.7, 262);
+  const c = anim(card({ left: '360px', top: '240px', width: '1200px', height: '600px', background: C.paper, borderRadius: '44px', boxShadow: `18px 18px 0 ${C.ink}` }, '', s), 254, null, { from: { y: 60, s: 0.95 } });
+  text({ left: '70px', top: '70px', fontSize: '120px', width: '1080px' }, '<div class="h">Need it now?<br/>Get it done.</div>', c);
+  text({ left: '74px', top: '370px', fontSize: '36px', width: '1060px' }, '<div class="b">LastMinute — bringing India’s home-based experts online, one urgent job at a time.</div>', c);
+  text({ left: '74px', top: '480px', fontSize: '28px', color: C.muted }, '<span class="m">Live demo, code & data room on request</span>', c);
+}
+</script>
+</body>
+</html>

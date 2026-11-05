@@ -1,60 +1,67 @@
 # LastMinute
 
-**Need it now? Get it done.** A mobile app (Expo / React Native) that connects people with an urgent job to skilled people who work from home and are hard to find: tailors, home cooks, bakers, mehendi artists, ironing, shoe & bag repair, beauty at home, flowers & gifts, tuition and small electronics repair.
+**Need it now? Get it done.** LastMinute connects people who need something done *today* with skilled people who work from home and are hard to find: tailors, home cooks, bakers, mehendi artists, ironing, shoe & bag repair, beauty at home, flowers & gifts, tuition and small electronics repair. It compares **Rapido, Porter, Uber and Ola** to move the item, and is designed for older providers who are new to smartphones.
 
-## Who it's for
+## What's in this repo
 
-- **Customers** search for a nearby provider who can finish in time, pick a deadline, and choose how the item travels. The app compares **Rapido, Porter, Uber and Ola** on price, reliability and speed for the pickup and drop.
-- **Service providers** (many of them older and new to smartphones) sign up in a few big steps. They get a simple home screen with large Accept / Decline buttons, a dashboard of profile visits, earnings and reviews, and a **Partners** tab for working with other providers.
-
-## Accessibility for older providers
-
-- Sign-up asks one question per screen, with a progress bar, picture tiles and ready-made service templates
-- Prices are set with big **+ / –** steppers instead of typing
-- **Read aloud** button (text-to-speech) on every key provider screen
-- **Easy mode** with bigger buttons, bigger text and a simplified home screen
-- Text size A / A+ / A++ and **Hindi / English**, offered on the very first screen
-- Icons always have text labels, high-contrast colours and tap targets of 44 px or more
-- Destructive actions ask for confirmation, and a helpline button is always visible
-
-## Accounts & login
-
-- Customers and providers sign in with their **mobile number + a 4-digit PIN**, typed on a big on-screen keypad. Sign-up asks for one thing per screen and makes you type the PIN twice. Very easy PINs like 1111 are refused.
-- After 5 wrong PINs the number is locked for 5 minutes.
-- PINs are stored only as salted SHA-256 hashes (`expo-crypto`).
-- Demo accounts (PIN **1234**): customer `9000012345` (Priya), provider `9820011111` (Kamala's Silai). The welcome screen has one-tap "Demo customer" and "Demo shop" links.
-
-## Admin panel
-
-Open **Admin login** at the bottom of the welcome screen, or go to `/admin`. Demo login: **admin / Admin@123**. Change it in Admin → Settings.
-
-| Section | What the admin can do |
+| Folder | What it is |
 |---|---|
-| Overview | users, providers, orders, value of completed orders, active and late orders, items that need attention, orders by status, providers by category |
-| Providers | search; verify or unverify (green tick); suspend, which hides the shop from customers, or restore |
-| Orders | filter active, past-due or closed orders; cancel an order |
-| Users | search; block (signs the user out and stops login) or unblock |
-| Reviews | list reviews, filter to 3★ and below, remove abusive ones (the rating is recalculated) |
-| Settings | change the admin password, log out, reset demo data |
+| `src/` | Mobile app (Expo / React Native, Android + iOS + web) |
+| `server/` | Secure API: the single source of truth for accounts, shops, orders and admin actions |
+| `admin-web/` | Super Admin web console (served by the API at `/console`) |
+| `docs/security/` | Security architecture, threat model, incident-response runbook |
+| `docs/compliance/` | DPDP Act 2023 map, ISO 27001 readiness, WCAG 2.2 AA report |
+| `docs/business/` | Business model & unit economics, strategic marketing plan |
+| `videos/` | Investor pitch, Instagram Reel and partner-recruitment videos (+ scripts and the code that renders them) |
 
-## Delivery partners
+## Two ways the app runs
 
-`src/lib/delivery.ts` estimates fares from each partner's published base fare and per-km rate (with a peak-hour surge) and ranks them with a last-minute score: 50% reliability, 30% price, 20% speed. None of these partners offers a public booking API. So booking copies the pickup and drop addresses to the clipboard and opens the partner app through a deep link, falling back to its website. Replace the estimator with real partner APIs when you have business access.
+- **Offline demo (default):** no server needed; sample data lives on the phone. Good for showing the product. Demo PIN **2580** — customer `9000012345`, provider `9820011111`.
+- **Live mode:** build with `EXPO_PUBLIC_API_URL=https://your-api` and every account, order, price and permission lives on the server. The phone keeps only display settings and a session token in the Android Keystore / iOS Keychain. **Use live mode for real users** — on-device data can always be edited by whoever holds the phone.
+
+## Features
+
+**Customers:** search & categories, "ready within 2 hours" filter, verified providers with real reviews, booking with deadline + rush-fee warning, delivery partner comparison (reliability-first ranking) and hand-off to the partner app, live order tracking, reviews, saved providers.
+
+**Providers:** 5-step sign-up (one question per screen, picture tiles, ready-made services, prices set with big +/−), huge Accept / Decline, read-aloud of every order, Easy mode, Hindi, dashboard (visits, earnings after commission, acceptance, ratings), collaboration requests with other providers, shop editor.
+
+**Privacy (DPDP Act):** plain-language notice in English & Hindi before sign-up, 18+ check, separate consents (marketing optional), Privacy Centre to download / correct / delete data, withdraw consent, add a nominee and raise grievances.
+
+**Admin (web console only):** password + authenticator-app 2FA, least-privilege roles, verify/suspend providers, cancel orders, block users, moderate reviews, handle privacy requests, breach register, tamper-evident audit log, admin account management.
+
+## Money rules (same in app and server)
+
+12% commission on the service price (5% in a provider's first 3 months) · 20% of the rush fee (provider keeps 80%) · ₹9 convenience fee per order · delivery paid directly to the delivery partner. Details: `docs/business/BUSINESS_MODEL.md`.
 
 ## Run it
 
 ```bash
+# app (offline demo)
 npm install
-npx expo start        # press a (Android), i (iOS) or w (web)
-npm run typecheck
-npx expo lint
+npx expo start                     # a = Android, i = iOS, w = web
+
+# server + admin console (development)
+cd admin-web && npm install && npm run build   # build the console once
+cd server && npm install && npm start          # http://localhost:8787, console at /console
+
+# app against the local server
+EXPO_PUBLIC_API_URL=http://localhost:8787 npx expo start
 ```
 
+Dev server demo data: users' PIN **2580**; admin `superadmin` / temporary password `Demo-Temp-Pass-2026` (you must set up 2FA and change it on first login). In production, demo data is refused — create the first admin with `npm run admin:create -- <name>`.
+
+## Quality checks
+
+```bash
+npx tsc --noEmit && npx expo lint      # app
+cd server && npm test                  # 32 security tests
+cd server && npm run typecheck
+cd admin-web && npm run build          # typecheck + build
+```
+
+End-to-end browser tests (Playwright) cover the app in demo and live mode and the admin console, including an axe WCAG 2.2 AA scan of 27 screens with zero violations.
+
 ## Build an Android APK
-
-The easiest way is EAS: `npx eas-cli@latest build -p android --profile preview` (needs a free Expo account).
-
-To build locally you need JDK 17 and the Android SDK (`ANDROID_HOME`):
 
 ```bash
 npx expo prebuild --platform android
@@ -62,35 +69,8 @@ cd android && ./gradlew assembleRelease -PreactNativeArchitectures=armeabi-v7a,a
 # → android/app/build/outputs/apk/release/app-release.apk
 ```
 
-The release build is signed with the debug key, which is fine for installing by hand. Before publishing on Play Store, create your own upload key.
+Needs JDK 17 and the Android SDK, or use EAS: `npx eas-cli@latest build -p android --profile preview`. The local release build is signed with the debug key — fine for installing by hand; use your own upload key for the Play Store.
 
-## Structure
+## Before launch
 
-```
-src/app/            Expo Router screens
-  welcome.tsx       role picker, language and text size, demo and admin links
-  auth.tsx          login and sign-up (mobile + PIN keypad)
-  admin/            admin login and admin panel
-  c/                customer tabs: home, search, orders, profile
-  p/                provider tabs: home, jobs, dashboard, partners
-  join.tsx          provider sign-up wizard
-  provider/[id]     provider profile (records a visit)
-  book/[id]         booking + delivery comparison
-  order/[id]        customer order tracking and review
-  job/[id]          provider job screen + book the return rider
-  shop.tsx          edit services, prices and hours
-  settings.tsx
-src/components/     neo-brutalist UI kit, cards, tab bar, delivery comparison
-src/state/store.tsx app state (persisted with AsyncStorage)
-src/data/           categories, types, seed data
-src/lib/            delivery quotes, i18n, formatting, search
-```
-
-## Not built yet
-
-Data lives **on the device** and is seeded with demo providers. Accounts, orders and admin actions are real inside one phone, but they are not shared between phones yet. Before launch you would add:
-- a backend (phone OTP login, provider listings, orders, admin API) so customers, providers and the admin see the same data
-- push notifications for new orders
-- real location and distance
-- UPI payments
-- partner API integrations
+See `docs/security/README.md` (deployment checklist), `docs/compliance/DPDPA.md` ("Still to do outside the code") and `docs/compliance/ISO27001.md`. In short: host the API on HTTPS in India with managed Postgres and a secret manager, plug in a DLT-registered SMS provider, appoint a Grievance Officer, get a lawyer to review the privacy texts, run an external penetration test, and test with TalkBack/VoiceOver users.

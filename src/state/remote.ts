@@ -11,7 +11,7 @@ interface SProvider {
 }
 interface SOrder {
   id: string; providerId: string; providerName: string; serviceId: string; serviceName: string; price: number; rushFee: number;
-  deliveryFee: number; platformFee: number; needBy: string; createdAt: string; handover: 'delivery' | 'self';
+  deliveryFee: number; platformFee: number; commission?: number; needBy: string; createdAt: string; handover: 'delivery' | 'self';
   delivery?: Order['delivery']; status: OrderStatus; customerName: string; customerPhone: string; address: string; notes: string;
   history: { status: OrderStatus; at: string }[]; review?: { rating: number; text: string };
 }
@@ -58,7 +58,9 @@ export function toOrder(o: SOrder, customerId: string): Order {
     serviceName: o.serviceName,
     price: o.price,
     rushFee: o.rushFee,
-    deliveryFee: o.deliveryFee + o.platformFee,
+    deliveryFee: o.deliveryFee,
+    platformFee: o.platformFee,
+    commission: o.commission,
     needBy: o.needBy,
     createdAt: o.createdAt,
     notes: o.notes,

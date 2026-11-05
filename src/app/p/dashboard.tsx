@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { StatTile } from '../../components/cards';
 import { Card, Row, Screen, Section, SpeakBtn, Stars, Txt } from '../../components/ui';
 import { dayLabel, rupees } from '../../lib/format';
+import { providerPayout } from '../../lib/pricing';
 import { useStore } from '../../state/store';
 import { border, colors } from '../../theme';
 
@@ -24,7 +25,7 @@ export default function Dashboard() {
   const accepted = answered.filter((o) => o.status !== 'declined');
   const acceptRate = answered.length ? Math.round((accepted.length / answered.length) * 100) : 100;
   const completed = mine.filter((o) => o.status === 'delivered');
-  const earned = completed.reduce((s, o) => s + o.price + o.rushFee, 0);
+  const earned = completed.reduce((s, o) => s + providerPayout(o), 0);
   const conversion = totalVisits ? Math.round((mine.length / totalVisits) * 1000) / 10 : 0;
   const max = Math.max(1, ...visits);
   const dist = [5, 4, 3, 2, 1].map((n) => ({ n, c: me.reviews.filter((r) => Math.round(r.rating) === n).length }));

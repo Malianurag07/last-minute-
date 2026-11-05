@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="base.css" />
+<style>#stage { width: 1080px; height: 1920px; }</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="lib.js"></script>
+<script>
+const { C, el, card, text, phone, anim, tap, backdrop, scene, onFrame, prog, ease, lerp } = V;
+const S = '../frames/screens/';
+const W = 1080, H = 1920;
+window.DURATION = 33;
+
+/** Big caption card at the top (safe zone: below the Reels UI, above the phone). */
+const cap = (p, t0, t1, html, { bg = C.white, top = 150, size = 66 } = {}) =>
+  anim(card({ left: '70px', top: `${top}px`, width: '940px', background: bg, padding: '28px 36px', borderRadius: '30px' }, `<div class="h" style="font-size:${size}px">${html}</div>`, p), t0, t1, { from: { y: -40, s: 0.96 }, dur: 0.45, easing: 'back' });
+const ph = (p, t0, t1, src, scroll = [[0, 0]], y = 520) => anim(phone({ x: 215, y, w: 650, src: S + src, scroll, parent: p }), t0, t1, { from: { y: 160 }, dur: 0.5 });
+
+backdrop(W, H);
+
+/* 0 — hook */
+{
+  const s = scene(0, 3.4, { background: C.ink });
+  anim(text({ left: '80px', top: '560px', width: '920px', fontSize: '128px', color: C.yellow }, '<div class="h">WEDDING<br/>TONIGHT.</div>', s), 0.1, null, { from: { s: 1.3, o: 0 }, dur: 0.4 });
+  anim(text({ left: '80px', top: '930px', width: '920px', fontSize: '84px', color: C.white }, '<div class="h">The blouse doesn’t fit.</div>', s), 1.2, null, { from: { y: 40 }, dur: 0.4 });
+  anim(text({ left: '80px', top: '1180px', width: '920px', fontSize: '60px', color: C.pink }, '<div class="h">Every tailor: “come tomorrow”.</div>', s), 2.1, null, { from: { y: 30 }, dur: 0.35 });
+}
+
+/* 1 — turn */
+{
+  const s = scene(3.2, 6.4);
+  anim(card({ left: '90px', top: '640px', width: '900px', height: '560px', background: C.paper, borderRadius: '40px' }, `
+    <div style="display:flex;align-items:center;gap:20px;font-size:52px"><span style="width:90px;height:90px;border:5px solid #111;border-radius:22px;background:${C.yellow};display:flex;align-items:center;justify-content:center;font-size:56px">⚡</span><span class="h">LastMinute</span></div>
+    <div class="h" style="font-size:104px;margin-top:40px">Need it now?<br/>Get it done.</div>`, s), 3.4, null, { from: { s: 0.8, o: 0, r: -4 }, dur: 0.5, easing: 'back' });
+}
+
+/* 2 — find */
+{
+  const s = scene(6.2, 11.4);
+  cap(s, 6.4, null, 'Find a home expert<br/>near you 🏠');
+  ph(s, 6.5, null, '10-home.png', [[6.6, 0], [8, 0], [11, 520]]);
+}
+
+/* 3 — provider */
+{
+  const s = scene(11.2, 15.6);
+  cap(s, 11.4, null, 'Kamala Aunty · 4.8★<br/>ready in 3 hrs ✂️', { bg: C.pinkSoft });
+  ph(s, 11.5, null, '12-provider.png', [[11.6, 0], [15.4, 420]]);
+}
+
+/* 4 — book */
+{
+  const s = scene(15.4, 20.6);
+  cap(s, 15.6, 18, 'Pick your deadline ⏰', { bg: C.yellowSoft });
+  cap(s, 18, null, 'We pick the cheapest<br/>reliable rider 🛵', { bg: C.blueSoft });
+  ph(s, 15.7, null, '13-booking.png', [[15.8, 0], [16.6, 300], [18, 300], [19.6, 1130]]);
+}
+
+/* 5 — progress */
+{
+  const s = scene(20.4, 25.6);
+  const steps = [[20.6, 'Accepted ✓', '22-customer-book-pickup.png', C.blueSoft], [22.2, 'Stitching… 🧵', '24-job-working.png', C.purpleSoft], [23.8, 'Ready! 🎉', '26-job-delivered.png', C.greenSoft]];
+  steps.forEach(([t0, label, src, bg], i) => {
+    cap(s, t0, i < 2 ? steps[i + 1][0] : null, label, { bg, size: 84 });
+    ph(s, t0, i < 2 ? steps[i + 1][0] + 0.2 : null, src);
+  });
+}
+
+/* 6 — done */
+{
+  const s = scene(25.4, 28.8);
+  cap(s, 25.6, null, 'Done before<br/>the party ✨', { bg: C.yellow, size: 92 });
+  ph(s, 25.7, null, '30-review.png', [[25.8, 0]], 600);
+  tap(215 + 330, 600 + 330, 26.8, s);
+}
+
+/* 7 — CTA */
+{
+  const s = scene(28.6, 33, { background: C.yellow });
+  anim(card({ left: '80px', top: '420px', width: '920px', height: '1000px', background: C.paper, borderRadius: '44px', boxShadow: `18px 18px 0 ${C.ink}` }, `
+    <div style="display:flex;align-items:center;gap:22px;font-size:56px"><span style="width:100px;height:100px;border:5px solid #111;border-radius:24px;background:${C.yellow};display:flex;align-items:center;justify-content:center;font-size:64px">⚡</span><span class="h">LastMinute</span></div>
+    <div class="h" style="font-size:112px;margin-top:50px">Need it now?<br/>Get it done.</div>
+    <div class="b" style="font-size:40px;margin-top:40px;line-height:1.4">Tailors · Bakers · Home food · Mehendi · Repairs · Tuition</div>
+    <div style="margin-top:56px"><span class="chip" style="font-size:46px;background:${C.pink};padding:14px 34px">Download LastMinute</span></div>`, s), 28.8, null, { from: { y: 120, s: 0.9 }, dur: 0.6, easing: 'back' });
+}
+</script>
+</body>
+</html>
